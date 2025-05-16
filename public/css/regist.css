@@ -1,0 +1,135 @@
+@font-face {
+	font-family: 'FranklinGothic';
+	src: url('../fonts/franklingothic_demi.ttf');
+}
+
+@font-face {
+	font-family: 'InterLight';
+	src: url('../fonts/Inter-Light.otf');
+}
+
+@font-face {
+	font-family: 'InterMedium';
+	src: url('../fonts/Inter-Medium.otf');
+}
+
+@font-face {
+	font-family: 'InterSemiBold';
+	src: url('../fonts/Inter-SemiBold.otf');
+}
+
+/* Стили для модального окна */
+.popup {
+	display: none;
+	position: fixed;
+	z-index: 10000000000;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	justify-content: center;
+	align-items: center;
+}
+
+/* Контент модального окна */
+.popup-content {
+	background: #fefefe;
+	padding: 25px 30px;
+	width: 460px;
+	text-align: center;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content h2 {
+	font-size: 35px;
+	font-family: 'FranklinGothic', sans-serif;
+	color: #333;
+	padding-bottom: 25px;
+	margin: 0;
+}
+
+.popup-content p {
+	font-size: 17px;
+	font-family: 'InterLight', sans-serif;
+	color: #666;
+	margin-top: 20px;
+}
+
+/* Поля ввода */
+.popup-content input {
+	width: 100%;
+	padding: 15px 20px;
+	margin: 12px 0;
+	border: 1px solid #ddd;
+	font-size: 16px;
+	background: #fff;
+	color: #333;
+	font-family: 'InterLight', sans-serif;
+}
+
+.popup-content input:focus {
+	outline: none;
+	border-color: #F8B13C;
+	box-shadow: 0 0 0 2px rgba(248, 177, 60, 0.1);
+}
+
+.popup-content input::placeholder {
+	color: #999;
+	font-family: 'InterLight', sans-serif;
+}
+
+/* Кнопка отправки */
+.popup-content button {
+	background: #F8B13C;
+	color: white;
+	padding: 15px;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	font-size: 20px;
+	font-family: 'InterSemiBold';
+	margin: 20px 0 0 0;
+	transition: background-color 0.3s ease;
+}
+
+/* Ховер-эффект */
+.popup-content button:hover {
+	background: #e69c2b;
+}
+
+/* Ссылки */
+.popup-content a.reg {
+	color: #F8B13C;
+	text-decoration: none;
+	transition: color 0.3s ease;
+	font-family: 'InterLight', sans-serif;
+	font-size: 17px;
+}
+
+.popup-content a.reg:hover {
+	color: #e69c2b;
+}
+
+/* Стили для сообщений об ошибках */
+.error {
+	color: #dc3545;
+	font-size: 14px;
+	font-family: 'InterLight', sans-serif;
+	display: block;
+	margin-top: 5px;
+	text-align: left;
+}
+
+/* Стили для сообщений об успехе */
+.success {
+	color: #28a745;
+	font-size: 14px;
+	font-family: 'InterLight', sans-serif;
+	margin-bottom: 15px;
+	padding: 10px;
+	background: rgba(40, 167, 69, 0.1);
+}
+
+
+

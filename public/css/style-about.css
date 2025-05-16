@@ -1,0 +1,496 @@
+/* Сброс стилей */
+@font-face {
+	font-family: '1'; 
+	src: url(../fonts/franklingothic_demi.ttf); 
+}
+
+@font-face {
+	font-family: '2'; 
+    src: url(../fonts/Inter-Light.otf);
+}
+
+@font-face {
+	font-family: '3'; 
+    src: url(../fonts/Inter-Medium.otf);
+}
+
+@font-face {
+	font-family: '4'; 
+    src: url(../fonts/Inter-SemiBold.otf);
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.heros {
+    width: 100%;
+    height: 100vh;
+    background: url('/img/banner2.png') no-repeat center center/cover;
+    color: white;  
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+}
+
+.heros-text{
+    padding: 0px 140px;
+}
+
+.Tur{
+    font-size: 48px;
+    font-family: '1';
+    color: white;
+}
+
+span{
+    color: #F8B13C;
+    font-family: '1';
+}
+
+.heros-text p{
+    font-size: 24px;
+    font-family: '2';
+    text-indent: 25px;
+}
+
+.tur-text{
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.about-click{
+    display: flex;
+    gap: 45px;
+}
+
+.about-click button{
+    padding: 10px 35px;
+    font-family: '4';
+    font-size: 20px;
+    margin-top: 15px;
+    background-color: #F8B13C;
+    border-color: #F8B13C;
+}
+
+.header22{
+    font-family: '4';
+}
+
+.click1{
+    width: 156px;
+}
+
+.click2{
+    width: 280px;
+}
+
+.click1:hover{
+    opacity: 0.8;
+}
+
+.click2:hover{
+    opacity: 0.8;
+}
+
+.click1 a{
+    list-style: none;
+    text-decoration: none;
+    color: white;
+}
+
+.click2 a{
+    list-style: none;
+    text-decoration: none;
+    color: white;
+}
+
+.fotos-header{
+    font-size: 48px;
+    color: #F8B13C;
+    text-align: center;
+    margin-top: 100px;
+    font-family: '4';
+}
+
+.fotos-text{
+    max-width: 983px;
+    text-align: center;
+    color: #545454;
+    font-family: '3';
+    font-size: 24px;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 60px;
+}
+
+.team {
+    padding: 40px 0;
+    text-align: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.teams {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.my-teams {
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    min-width: 250px; /* Минимальная ширина блока */
+}
+
+.my-teams img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.my-teams .default-image {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    background-color: #ddd; /* Цвет фона для заглушки */
+}
+
+.team-text {
+    font-size: 18px;
+    color: #666;
+    margin: 5px 0;
+    font-family: '2';
+}
+
+.team-text2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin: 5px 0;
+    font-family: '4';
+}
+
+.contacts-text{
+    padding: 25px 0;
+}
+
+.contacts-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 300px;
+    max-width: 1400px; /* Контейнер контента */
+    margin: 70px auto;
+    padding: 40px 0;
+}
+
+.texts1{
+    color: black;
+    font-family: '2';
+    padding: 5px;
+    font-size: 18px;
+}
+
+.texts2{
+    color: black;
+    font-family: '2';
+    padding: 5px;
+    font-size: 18px;
+}
+
+/* Медиа-запросы для адаптивности блока команды */
+@media screen and (max-width: 1200px) {
+    .teams {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .teams {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .teams {
+        grid-template-columns: 1fr;
+    }
+    
+    .my-teams {
+        max-width: 350px;
+        margin: 0 auto;
+    }
+}
+
+
+/* Стили для карточки гида */
+.my-teams {
+    position: relative;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    min-width: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.my-teams img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    margin-bottom: 15px;
+    transition: all 0.4s ease;
+}
+
+/* Затемнение фона */
+.my-teams::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+}
+
+/* Стили для текста описания */
+.team-text3 {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    padding: 20px;
+    color: white;
+    font-size: 18px;
+    line-height: 1.4;
+    font-family: '2';
+    z-index: 2;
+    transform: translateY(30px);
+    opacity: 0;
+    transition: all 0.4s ease;
+    background: rgba(248, 177, 60, 0.9);
+    border-radius: 8px;
+    max-height: 60%;
+    overflow-y: auto; /* Скролл только при необходимости */
+    word-wrap: break-word; /* Перенос длинных слов */
+    white-space: normal; /* Многострочный текст */
+    box-sizing: border-box;
+}
+
+/* Стили для имени и должности */
+.team-text, 
+.team-text2 {
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.team-text {
+    font-size: 18px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.team-text2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin: 5px 0 15px;
+}
+
+/* Эффекты при наведении */
+.my-teams:hover::before {
+    opacity: 1;
+}
+
+.my-teams:hover img {
+    filter: brightness(0.5);
+}
+
+.my-teams:hover .team-text3 {
+    transform: translateY(-50%);
+    opacity: 1;
+}
+
+.my-teams:hover .team-text,
+.my-teams:hover .team-text2 {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Кастомный скролл */
+.team-text3::-webkit-scrollbar {
+    width: 10px;
+}
+
+.team-text3::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 3px;
+}
+
+
+/* Бургер меню */
+.burger-menu {
+    display: none;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.burger-icon {
+    width: 30px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.burger-icon span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+/* Анимация бургера при открытии */
+.burger-menu.active .burger-icon span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.burger-menu.active .burger-icon span:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu.active .burger-icon span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Мобильное меню */
+.nav {
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 1020px) {
+    .burger-menu {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+    }
+    
+    .nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 90%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.9);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.5s ease;
+        z-index: 999;
+    }
+    
+    .nav.active {
+        left: 0;
+    }
+    
+    .nav ul {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .header {
+        padding: 20px;
+    }
+    
+    .login {
+        margin-left: auto;
+        padding-right: 15px;
+    }
+
+    .Tur{
+        font-size: 36px;
+    }
+
+    .tur-text{
+        font-size: 20px;
+    }
+}
+
+
+
+@media (max-width: 700px) {
+
+    .Tur{
+        font-size: 24px;
+        margin-top: 70px;
+    }
+
+    .tur-text{
+        font-size: 16px;
+    }
+
+    .about-click button{
+        padding: 5px 8px;
+        font-family: '4';
+        font-size: 16px;
+        margin-top: 15px;
+        background-color: #F8B13C;
+        border-color: #F8B13C;
+    }
+
+    .about-click{
+        display: flex;
+        gap: 25px;
+    }
+
+    .click2{
+        width: 230px;
+    }
+
+    .header22{
+        font-size: 18px;
+    }
+
+    .heros-text{
+        padding: 0px 50px;
+    }
+
+    .contacts-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        max-width: 500px; /* Контейнер контента */
+        margin: 30px auto;
+        padding: 20px 0;
+    }
+
+    .fram{
+        width: 450px;
+        height: 450px;
+    }
+
+}

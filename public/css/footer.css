@@ -1,0 +1,43 @@
+@font-face {
+    font-family: '2';
+    src: url('../fonts/Inter-Light.otf');
+}
+
+.foote{
+    background-color: #F8B13C;
+    height: 150px;
+}
+
+.logo-foote{
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+    padding-bottom: 5px;
+}
+
+.logo-foote img{
+    height: 50px;
+}
+
+.copy img{
+    height: 40px;
+}
+
+
+.copy p{
+    font-family: '2';
+    font-size: 18px;
+}
+
+.copy{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 500px) {
+
+    .copy p{
+        font-size: 20px;
+    }
+}

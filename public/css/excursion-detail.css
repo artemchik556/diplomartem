@@ -1,0 +1,408 @@
+/* Общие стили для всех блоков (бронирование, отзывы, информация) */
+.booking-section,
+.review-form,
+.excursion-section,
+.guide-info,
+.reviews-section {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+/* Стили для уведомлений */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Заголовки блоков */
+.booking-form h2,
+.review-form h2,
+.excursion-section h2,
+.reviews-section h2 {
+    font-family: 'InterSemiBold';
+    font-size: 22px;
+    color: #F8B13C;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* Формы */
+.booking-form form,
+.review-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Группы полей формы */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-family: 'InterMedium';
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Стили для звездного рейтинга (новые) */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    font-size: 1.5em;
+    gap: 5px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+    color: #F8B13C;
+}
+
+/* Поля ввода */
+.form-control,
+input[type="date"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+    font-family: 'InterLight';
+    transition: all 0.3s;
+}
+
+.form-control:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: #F8B13C;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(248, 177, 60, 0.2);
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Кнопки */
+.btn-primary,
+.btn {
+    background-color: #F8B13C;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'InterMedium';
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-primary:hover,
+.btn:hover {
+    background-color: #da982e;
+}
+
+/* Секция отзывов (сохранена структура, обновлены только стили звезд) */
+.review-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.review-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.review-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.review-rating .fa-star {
+    color: #ddd;
+    font-size: 16px;
+}
+
+.review-rating .fa-star.active {
+    color: #F8B13C;
+}
+
+.review-author,
+.review-date {
+    font-family: 'InterMedium';
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.review-content {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #444;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #777;
+    padding: 20px 0;
+}
+
+/* Информация о датах */
+.date-range-info {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .excursion-wrapper {
+        flex-direction: column;
+        margin-top: 120px;
+    }
+    
+    .excursion-image-container,
+    .excursion-content {
+        max-width: 100%;
+    }
+    
+    .excursion-detail-image {
+        width: 100%;
+        height: auto;
+    }
+    
+    .header {
+        padding: 20px 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 15px 20px;
+        gap: 15px;
+    }
+    
+    .nav ul {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .excursion-wrapper {
+        padding: 20px;
+        margin-top: 160px;
+    }
+    
+    .transport-methods {
+        flex-direction: column;
+    }
+    
+    .booking-form,
+    .review-form {
+        padding: 15px;
+    }
+    
+    .star-rating {
+        font-size: 1.3em;
+    }
+}
+
+.excursion-image-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.excursion-main-image,
+.excursion-detail-image {
+    height: 565px;
+    object-fit: cover;
+    display: block;
+}
+
+.excursion-main-image {
+    max-height: 500px;
+}
+
+@media (max-width: 768px) {
+    .excursion-main-image,
+    .excursion-detail-image {
+        margin-top: 160px;
+        height: 565px;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+@media (max-width: 500px) {
+    .excursion-main-image,
+    .excursion-detail-image {
+        margin-top: 160px;
+        width: 460px;
+        height: 450px;
+        object-fit: cover;
+        display: block;
+    }
+    
+    .star-rating {
+        font-size: 1.1em;
+    }
+}
+
+
+/* Стили для попапа скидки */
+.discount-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.discount-popup-overlay:not(.hidden) {
+    opacity: 1;
+}
+
+.discount-popup-overlay.hidden {
+    display: none !important;
+}
+.discount-popup {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.discount-content h3 {
+    color: #F8B13C;
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-family: 'InterSemiBold';
+}
+
+.discount-content p {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.price-details {
+    margin: 20px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.price-row.discount {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.price-row.total {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #F8B13C;
+}
+
+.btn-close-popup {
+    background-color: #F8B13C;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto 0;
+    transition: background-color 0.3s;
+    font-family: 'InterMedium';
+}
+
+.btn-close-popup:hover {
+    background-color: #da982e;
+}
+
+
+

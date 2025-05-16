@@ -1,0 +1,90 @@
+/* Сброс стилей */
+@font-face {
+	font-family: '1'; 
+	src: url(../fonts/franklingothic_demi.ttf); 
+}
+
+@font-face {
+	font-family: '2'; 
+    src: url(../fonts/Inter-Light.otf);
+}
+
+@font-face {
+	font-family: '3'; 
+    src: url(../fonts/Inter-Medium.otf);
+}
+
+@font-face {
+	font-family: '4'; 
+    src: url(../fonts/Inter-SemiBold.otf);
+}
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Шапка */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 140px;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #666;
+}
+
+.logo img {
+    height: 40px;
+    max-width: 100%;
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    gap: 50px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    font-family: '2';
+    transition: color 0.3s ease;
+}
+
+.nav a:hover {
+    color: #F8B13C;
+}
+
+.login a {
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+    font-family: '2';
+    transition: color 0.3s ease;
+}
+
+.login a:hover {
+    color: #F8B13C;
+}
+
+.user {
+    padding: 5px;
+    font-family: '3';
+    font-size: 20px;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+.user:hover {
+    color: #F8B13C;
+}

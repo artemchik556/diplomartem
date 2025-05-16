@@ -1,0 +1,187 @@
+@font-face {
+    font-family: '1'; 
+    src: url(../fonts/franklingothic_demi.ttf); 
+}
+
+@font-face {
+    font-family: '2'; 
+    src: url(../fonts/Inter-Light.otf);
+}
+
+.plus {
+    display: flex;
+    justify-content: center;
+    margin-top: 45px;
+}
+
+h1 {
+    margin: 15px 20px;
+    font-family: '2';
+    text-align: center;
+    color: white;
+}
+
+.bloc-info {
+    background-color: #CFCFCF;
+    width: 100%;
+    padding: 35px;
+    border-radius: 10px;
+}
+
+/* Стили для таблицы */
+.excursions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.excursions-table th, .excursions-table td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.excursions-table th {
+    background: #524848;
+    color: white;
+    font-family: '1';
+}
+
+.excursions-table td {
+    font-family: '2';
+}
+
+/* Действия (кнопки) */
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn {
+    padding: 12px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+    font-family: '2';
+}
+
+.btn-edit {
+    background: #F8B13C;
+    border: none;
+    cursor: pointer;
+    
+}
+
+.btn-edit:hover{
+    background: #da982e;
+}
+
+.btn-delete {
+    background: #d9534f;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background: #bd433f;
+}
+
+/* Форма удаления */
+.delete-form {
+    display: inline;
+}
+
+button{
+
+    margin-top: 15px;
+}
+
+.add{
+    padding: 15px 15px;
+    background-color: #F8B13C;
+    color: white;
+    font-family: '2';
+    font-size: 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    list-style: none;
+}
+
+.add:hover{
+    background: #da982e;
+}
+
+
+
+.filter-form {
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    margin-bottom: 10px;
+}
+
+.filter-group label {
+    margin-right: 10px;
+}
+
+.excursions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.excursion-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.excursion-card h3 {
+    margin-top: 0;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    color: white;
+}
+
+.btn-edit {
+    background-color: #4CAF50; /* Зеленый */
+}
+
+.btn-delete {
+    background-color: #f44336; /* Красный */
+}
+
+.btn-filter {
+    background-color: #008CBA; /* Синий */
+}
+
+.add {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #008CBA; /* Синий */
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}

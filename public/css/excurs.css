@@ -1,0 +1,316 @@
+/* Подключение шрифтов */
+@font-face {
+    font-family: 'FranklinGothic';
+    src: url('../fonts/franklingothic_demi.ttf');
+}
+
+@font-face {
+    font-family: 'InterLight';
+    src: url('../fonts/Inter-Light.otf');
+}
+
+@font-face {
+    font-family: 'InterMedium';
+    src: url('../fonts/Inter-Medium.otf');
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../fonts/Inter-SemiBold.otf');
+}
+
+/* Сброс стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Общие стили */
+body {
+    font-family: 'InterLight', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Шапка */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;flex-wrap: wrap;
+    padding: 40px 140px;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #545454;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    gap: 50px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    font-family: 'InterLight';
+    transition: color 0.3s;
+}
+
+.nav a:hover {
+    color: #F8B13C;
+}
+
+.login a {
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+    font-family: 'InterLight';
+    transition: color 0.3s;
+}
+
+.login a:hover {
+    color: #F8B13C;
+}
+
+.user {
+    padding: 5px;
+    font-family: 'InterMedium';
+    font-size: 20px;
+    color: white;
+    margin-right: 15px;
+}
+
+/* Основной контейнер с двумя колонками */
+.excursion-wrapper {
+    max-width: 1440px;
+    margin: 140px auto 100px; /* Отступ сверху для шапки */
+    padding: 50px 20px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* Контейнер для изображения */
+.excursion-image-container {
+    flex: 1;
+    max-width: 50%;
+}
+
+.excursion-detail-image {
+    width: 700px;
+    height: 750px;
+    max-height: 600px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Контейнер для контента */
+.excursion-content {
+    flex: 1;
+    max-width: 100%;
+}
+
+.excursion-content h1 {
+    font-family: 'FranklinGothic', sans-serif;
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Секции */
+.excursion-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.excursion-section h2 {
+    font-family: 'InterSemiBold';
+    font-size: 22px;
+    color: #F8B13C;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.excursion-section p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Способы добраться */
+.transport-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.transport-method h3 {
+    font-family: 'InterMedium';
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.transport-method p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Информация о гиде */
+.guide-info {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.guide-info h3 {
+    font-family: 'InterSemiBold';
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.guide-info p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Форма бронирования */
+
+
+.form-group label {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+}
+
+.form-check-label {
+    font-size: 16px;
+    color: #666;
+}
+
+.form-check-input:disabled + .form-check-label {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.form-control:focus {
+    border-color: #F8B13C;
+    outline: none;
+}
+
+input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+    margin-bottom: 20px;
+}
+
+input[type="date"]:focus {
+    border-color: #F8B13C;
+    outline: none;
+}
+
+.btn-primary {
+    background-color: #F8B13C;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'InterMedium';
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #da982e;
+}
+
+/* Отладочная информация */
+.debug-info {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.debug-info p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Уведомление для гостей */
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-info a {
+    color: #F8B13C;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.alert-info a:hover {
+    text-decoration: underline;
+}
+
+.date-range-info-text{
+    color: rgb(0, 0, 0);
+}
+/* Адаптивность */
