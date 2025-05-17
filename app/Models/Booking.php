@@ -20,6 +20,7 @@ class Booking extends Model
         'discount',
         'discount_amount',
         'final_price',
+        'name',
     ];
     protected $casts = [
         'booking_date' => 'datetime',
