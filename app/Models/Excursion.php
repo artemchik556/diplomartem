@@ -26,7 +26,8 @@ class Excursion extends Model
         'guide_id',
         'group_a_seats',
         'group_b_seats',
-        'group_c_seats'
+        'group_c_seats',
+        'is_active'
     ];
 
     protected $casts = [
@@ -35,6 +36,8 @@ class Excursion extends Model
         'group_a_seats' => 'integer',
         'group_b_seats' => 'integer',
         'group_c_seats' => 'integer',
+        'is_active' => 'boolean',
+        'price' => 'decimal:2'
     ];
 
     public function guide()
@@ -52,12 +55,21 @@ class Excursion extends Model
         return $this->reviews()->where('is_approved', true);
     }
 
-    public function availableSeats(string $group): int
+    public function bookings()
     {
-        return $this->{"group_{$group}_seats"} ?? 0;
+        return $this->hasMany(Booking::class);
     }
 
-        public function getSeasonAttribute()
+    public function availableSeats(string $group): int
+    {
+        $groupKey = "group_{$group}_seats";
+        if (!in_array($group, ['a', 'b', 'c'])) {
+            return 0;
+        }
+        return $this->$groupKey ?? 0;
+    }
+
+    public function getSeasonAttribute()
     {
         $month = $this->start_date->month;
         
@@ -70,5 +82,30 @@ class Excursion extends Model
         } else {
             return 'autumn';
         }
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->approvedReviews()->avg('rating') ?? 0;
+    }
+
+    public function getTotalBookingsAttribute()
+    {
+        return $this->bookings()->count();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeUpcoming($query)
+    {
+        return $query->where('start_date', '>', now());
+    }
+
+    public function scopePast($query)
+    {
+        return $query->where('end_date', '<', now());
     }
 }

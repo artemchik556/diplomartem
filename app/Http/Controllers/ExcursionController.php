@@ -95,26 +95,26 @@ class ExcursionController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'start_date' => 'required|date_format:Y-m-d\TH:i',
-            'end_date' => 'required|date_format:Y-m-d\TH:i|after:start_date',
-            'price' => 'required|numeric|min:0',
-            'preparation_level' => 'nullable|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'detail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'group_a_seats' => 'required|integer|min:1',
-            'group_b_seats' => 'required|integer|min:1',
-            'group_c_seats' => 'required|integer|min:1',
-            'guide_id' => 'required|exists:guides,id',
-            'location' => 'required|string',
-            'transport_car' => 'nullable|string',
-            'transport_bus' => 'nullable|string',
-            'transport_train' => 'nullable|string',
-        ]);
-
         try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:191',
+                'description' => 'required|string',
+                'start_date' => 'required|date_format:Y-m-d\TH:i',
+                'end_date' => 'required|date_format:Y-m-d\TH:i|after:start_date',
+                'price' => 'required|numeric|min:0',
+                'preparation_level' => 'required|in:easy,medium,hard',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'detail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'group_a_seats' => 'required|integer|min:1',
+                'group_b_seats' => 'required|integer|min:1',
+                'group_c_seats' => 'required|integer|min:1',
+                'guide_id' => 'required|exists:guides,id',
+                'location' => 'required|string|max:191',
+                'transport_car' => 'nullable|string',
+                'transport_bus' => 'nullable|string',
+                'transport_train' => 'nullable|string',
+            ]);
+
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('excursions', 'public');
                 $validated['image'] = $imagePath;
@@ -125,18 +125,21 @@ class ExcursionController extends Controller
                 $validated['detail_image'] = $detailImagePath;
             }
 
-            $validated['start_date'] = Carbon::parse($request->start_date);
-            $validated['end_date'] = Carbon::parse($request->end_date);
+            $validated['start_date'] = Carbon::parse($request->start_date)->format('Y-m-d H:i:s');
+            $validated['end_date'] = Carbon::parse($request->end_date)->format('Y-m-d H:i:s');
 
             Excursion::create($validated);
 
             return redirect()->route('admin.excursions.index')
                 ->with('success', 'Экскурсия успешно добавлена');
         } catch (\Exception $e) {
-            Log::error('Error creating excursion: ' . $e->getMessage());
+            Log::error('Error creating excursion: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Произошла ошибка при создании экскурсии: ' . $e->getMessage());
+                ->with('error', 'Произошла ошибка при создании экскурсии. Пожалуйста, попробуйте позже.');
         }
     }
 
@@ -154,50 +157,64 @@ class ExcursionController extends Controller
 
     public function update(Request $request, Excursion $excursion)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'location' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'detail_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'transport_car' => 'nullable|string',
-            'transport_bus' => 'nullable|string',
-            'transport_train' => 'nullable|string',
-            'preparation_level' => 'nullable|string',
-            'guide_id' => 'required|exists:guides,id',
-            'group_a_seats' => 'required|integer|min:1',
-            'group_b_seats' => 'required|integer|min:1',
-            'group_c_seats' => 'required|integer|min:1',
-        ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:191',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0',
+                'start_date' => 'required|date_format:Y-m-d\TH:i',
+                'end_date' => 'required|date_format:Y-m-d\TH:i|after:start_date',
+                'location' => 'required|string|max:191',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'detail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'transport_car' => 'nullable|string',
+                'transport_bus' => 'nullable|string',
+                'transport_train' => 'nullable|string',
+                'preparation_level' => 'required|in:easy,medium,hard',
+                'guide_id' => 'required|exists:guides,id',
+                'group_a_seats' => 'required|integer|min:1',
+                'group_b_seats' => 'required|integer|min:1',
+                'group_c_seats' => 'required|integer|min:1',
+            ]);
 
-        if ($request->hasFile('image')) {
-            if ($excursion->image) {
-                Storage::disk('public')->delete($excursion->image);
+            if ($request->hasFile('image')) {
+                if ($excursion->image) {
+                    Storage::disk('public')->delete($excursion->image);
+                }
+                $validated['image'] = $request->file('image')->store('excursions', 'public');
             }
-            $validated['image'] = $request->file('image')->store('excursions', 'public');
-        }
 
-        if ($request->hasFile('detail_image')) {
-            if ($excursion->detail_image) {
-                Storage::disk('public')->delete($excursion->detail_image);
+            if ($request->hasFile('detail_image')) {
+                if ($excursion->detail_image) {
+                    Storage::disk('public')->delete($excursion->detail_image);
+                }
+                $validated['detail_image'] = $request->file('detail_image')->store('excursions', 'public');
             }
-            $validated['detail_image'] = $request->file('detail_image')->store('excursions', 'public');
+
+            $validated['start_date'] = Carbon::parse($request->start_date)->format('Y-m-d H:i:s');
+            $validated['end_date'] = Carbon::parse($request->end_date)->format('Y-m-d H:i:s');
+
+            $excursion->update($validated);
+
+            return redirect()->route('admin.excursions.index')
+                ->with('success', 'Экскурсия успешно обновлена');
+        } catch (\Exception $e) {
+            Log::error('Error updating excursion: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all(),
+                'excursion_id' => $excursion->id
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Произошла ошибка при обновлении экскурсии. Пожалуйста, попробуйте позже.');
         }
-
-        $excursion->update($validated);
-
-        return redirect()->route('admin.excursions.index')
-            ->with('success', 'Экскурсия успешно обновлена');
     }
 
     public function destroy($id)
     {
         try {
             $excursion = Excursion::findOrFail($id);
-
+            
             // Удаляем изображения
             if ($excursion->image) {
                 Storage::disk('public')->delete($excursion->image);
@@ -205,23 +222,18 @@ class ExcursionController extends Controller
             if ($excursion->detail_image) {
                 Storage::disk('public')->delete($excursion->detail_image);
             }
-
-            // Удаляем экскурсию
+            
             $excursion->delete();
-
-            return redirect()->route('admin.dashboard')
+            
+            return redirect()->route('admin.excursions.index')
                 ->with('success', 'Экскурсия успешно удалена');
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return redirect()->route('admin.dashboard')
-                ->with('error', 'Экскурсия не найдена');
         } catch (\Exception $e) {
-            \Log::error('Ошибка при удалении экскурсии:', [
-                'excursion_id' => $id,
-                'error' => $e->getMessage()
+            Log::error('Error deleting excursion: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'excursion_id' => $id
             ]);
-
-            return redirect()->route('admin.dashboard')
-                ->with('error', 'Произошла ошибка при удалении экскурсии');
+            return redirect()->back()
+                ->with('error', 'Произошла ошибка при удалении экскурсии. Пожалуйста, попробуйте позже.');
         }
     }
 
