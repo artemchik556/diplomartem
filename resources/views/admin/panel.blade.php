@@ -143,7 +143,12 @@
                     </div>
                     <div class="form-group">
                         <label for="preparation_level">Уровень подготовки:</label>
-                        <input type="text" class="form-control" id="preparation_level" name="preparation_level" value="{{ old('preparation_level') }}">
+                        <select class="form-control" id="preparation_level" name="preparation_level" required>
+                            <option value="">Выберите уровень</option>
+                            <option value="easy" {{ old('preparation_level') == 'easy' ? 'selected' : '' }}>Легкий</option>
+                            <option value="medium" {{ old('preparation_level') == 'medium' ? 'selected' : '' }}>Средний</option>
+                            <option value="hard" {{ old('preparation_level') == 'hard' ? 'selected' : '' }}>Сложный</option>
+                        </select>
                         @error('preparation_level') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <button type="submit" class="btn btn-primary">Добавить экскурсию</button>
@@ -265,8 +270,12 @@
                     </div>
                     <div class="form-group">
                         <label for="preparation_level">Уровень подготовки</label>
-                        <input type="text" class="form-control" id="preparation_level" name="preparation_level" 
-                               value="{{ old('preparation_level', $excursion->preparation_level) }}">
+                        <select class="form-control" id="preparation_level" name="preparation_level" required>
+                            <option value="">Выберите уровень</option>
+                            <option value="easy" {{ old('preparation_level', $excursion->preparation_level) == 'easy' ? 'selected' : '' }}>Легкий</option>
+                            <option value="medium" {{ old('preparation_level', $excursion->preparation_level) == 'medium' ? 'selected' : '' }}>Средний</option>
+                            <option value="hard" {{ old('preparation_level', $excursion->preparation_level) == 'hard' ? 'selected' : '' }}>Сложный</option>
+                        </select>
                         @error('preparation_level') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить изменения</button>

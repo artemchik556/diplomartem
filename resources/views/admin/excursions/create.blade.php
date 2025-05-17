@@ -132,7 +132,12 @@
 
             <div class="mb-3">
                 <label for="preparation_level" class="form-label">Уровень подготовки</label>
-                <textarea class="form-control" id="preparation_level" name="preparation_level" rows="2" required>{{ old('preparation_level') }}</textarea>
+                <select class="form-select" id="preparation_level" name="preparation_level" required>
+                    <option value="">Выберите уровень</option>
+                    <option value="easy" {{ old('preparation_level') == 'easy' ? 'selected' : '' }}>Легкий</option>
+                    <option value="medium" {{ old('preparation_level') == 'medium' ? 'selected' : '' }}>Средний</option>
+                    <option value="hard" {{ old('preparation_level') == 'hard' ? 'selected' : '' }}>Сложный</option>
+                </select>
                 @error('preparation_level')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
