@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('consultations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone');
+            $table->string('name', 191);
+            $table->string('email', 191);
+            $table->string('phone', 191);
             $table->timestamps();
         });
     }

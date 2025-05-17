@@ -13,23 +13,23 @@ return new class extends Migration
     {
         Schema::create('excursions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title', 191);
             $table->text('description');
             $table->decimal('price', 10, 2);
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
-            $table->string('location');
-            $table->string('image')->nullable();
-            $table->string('detail_image')->nullable();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
+            $table->string('location', 191);
+            $table->string('image', 191)->nullable();
+            $table->string('detail_image', 191)->nullable();
             $table->text('transport_car')->nullable();
             $table->text('transport_bus')->nullable();
             $table->text('transport_train')->nullable();
-            $table->text('preparation_level')->nullable();
+            $table->enum('preparation_level', ['easy', 'medium', 'hard'])->default('medium');
             $table->integer('group_a_seats')->default(0);
             $table->integer('group_b_seats')->default(0);
             $table->integer('group_c_seats')->default(0);
             $table->boolean('is_active')->default(true);
-            $table->foreignId('guide_id')->constrained('guides')->onDelete('cascade');
+            $table->foreignId('guide_id')->nullable()->constrained('guides')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -42,4 +42,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('excursions');
     }
-};
+}; 

@@ -6,7 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
@@ -14,14 +17,17 @@ return new class extends Migration
             $table->foreignId('excursion_id')->constrained()->onDelete('cascade');
             $table->enum('group_type', ['a', 'b', 'c']);
             $table->integer('number_of_people');
-            $table->string('name');
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
             $table->timestamp('booking_date');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('bookings');
     }

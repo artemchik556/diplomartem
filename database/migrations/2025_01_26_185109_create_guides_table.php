@@ -9,14 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('guides', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('position');
+            $table->string('name', 191);
+            $table->string('position', 191);
             $table->text('description')->nullable();
-            $table->string('image')->nullable();
+            $table->string('image', 191)->nullable();
             $table->timestamps();
         });
     }
