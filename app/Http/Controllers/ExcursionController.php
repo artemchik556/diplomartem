@@ -278,7 +278,8 @@ class ExcursionController extends Controller
                     'status' => 'pending',
                     'discount' => $discount,
                     'discount_amount' => $discountAmount,
-                    'final_price' => $finalPrice
+                    'final_price' => $finalPrice,
+                    'name' => Auth::user()->name,
                 ]);
 
                 // Обновляем количество доступных мест

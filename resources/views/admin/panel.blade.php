@@ -154,20 +154,6 @@
             <!-- Редактирование экскурсии -->
             <div class="tab-pane fade" id="edit-excursion" role="tabpanel">
                 <h2>Редактирование экскурсии</h2>
-                
-                <!-- Список экскурсий для выбора -->
-                <div class="mb-4">
-                    <label for="excursion-select">Выберите экскурсию для редактирования:</label>
-                    <select class="form-control" id="excursion-select" onchange="window.location.href='{{ route('admin.dashboard') }}?excursion_id=' + this.value">
-                        <option value="">Выберите экскурсию</option>
-                        @foreach($excursions as $ex)
-                            <option value="{{ $ex->id }}" {{ request('excursion_id') == $ex->id ? 'selected' : '' }}>
-                                {{ $ex->title }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
                 @if($excursion)
                 <form class="pad" id="edit-excursion-form" method="POST" action="{{ route('admin.excursions.update', $excursion->id) }}" enctype="multipart/form-data">
                     @csrf
@@ -286,17 +272,8 @@
                     <button type="submit" class="btn btn-primary">Сохранить изменения</button>
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Отмена</a>
                 </form>
-
-                <!-- Форма удаления экскурсии -->
-                <form action="{{ route('admin.excursions.destroy', $excursion->id) }}" method="POST" class="mt-3" onsubmit="return confirm('Вы уверены, что хотите удалить эту экскурсию?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Удалить экскурсию</button>
-                </form>
                 @else
-                <div class="alert alert-info">
-                    Выберите экскурсию для редактирования из списка выше.
-                </div>
+                <p>Выберите экскурсию для редактирования из списка.</p>
                 @endif
             </div>
 
@@ -658,14 +635,7 @@
                     window.location.href = '{{ route('admin.dashboard') }}#list-excursions';
                 },
                 error: function(xhr) {
-                    let errors = xhr.responseJSON.errors;
-                    let errorHtml = '<div class="alert alert-danger"><ul>';
-                    for (let field in errors) {
-                        errorHtml += '<li>' + errors[field][0] + '</li>';
-                    }
-                    errorHtml += '</ul></div>';
-                    $('.alert').remove();
-                    $('#add-excursion-form').prepend(errorHtml);
+                    alert('Ошибка при добавлении экскурсии: ' + xhr.responseText);
                 }
             });
         });
@@ -684,54 +654,26 @@
                     window.location.href = '{{ route('admin.dashboard') }}#list-excursions';
                 },
                 error: function(xhr) {
-                    let errors = xhr.responseJSON.errors;
-                    let errorHtml = '<div class="alert alert-danger"><ul>';
-                    for (let field in errors) {
-                        errorHtml += '<li>' + errors[field][0] + '</li>';
-                    }
-                    errorHtml += '</ul></div>';
-                    $('.alert').remove();
-                    $('#edit-excursion-form').prepend(errorHtml);
+                    alert('Ошибка при сохранении изменений: ' + xhr.responseText);
                 }
             });
         });
 
         // AJAX для форм удаления
-        $('.delete-form').on('submit', function(e) {
-            e.preventDefault();
-            if (confirm('Вы уверены, что хотите удалить эту экскурсию? Это действие нельзя отменить.')) {
-                let form = $(this);
-                $.ajax({
-                    url: form.attr('action'),
-                    method: 'POST',
-                    data: form.serialize(),
-                    success: function(response) {
-                        window.location.href = '{{ route('admin.dashboard') }}#list-excursions';
-                    },
-                    error: function(xhr) {
-                        alert('Ошибка при удалении экскурсии: ' + xhr.responseText);
-                    }
-                });
-            }
-        });
-
-        // Предпросмотр изображений
-        function previewImage(input, previewId) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#' + previewId).attr('src', e.target.result);
+        document.querySelectorAll('.delete-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (confirm('Вы уверены, что хотите удалить эту экскурсию? Это действие нельзя отменить.')) {
+                    this.submit();
                 }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $('#image').change(function() {
-            previewImage(this, 'image-preview');
+            });
         });
 
-        $('#detail_image').change(function() {
-            previewImage(this, 'detail-image-preview');
+        // Подтверждение удаления фото
+        document.getElementById('remove_photo')?.addEventListener('change', function() {
+            if (this.checked && !confirm('Вы уверены, что хотите удалить фотографию?')) {
+                this.checked = false;
+            }
         });
 
         // Активация вкладки после загрузки страницы
@@ -746,23 +688,7 @@
             }
         });
 
-        // Валидация дат
-        function validateDates() {
-            let startDate = new Date($('#start_date').val());
-            let endDate = new Date($('#end_date').val());
-            
-            if (startDate >= endDate) {
-                alert('Дата окончания должна быть позже даты начала');
-                return false;
-            }
-            return true;
-        }
-
-        $('#add-excursion-form, #edit-excursion-form').on('submit', function(e) {
-            if (!validateDates()) {
-                e.preventDefault();
-            }
-        });
+        
     </script>
 </body>
 </html>
