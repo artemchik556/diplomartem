@@ -250,6 +250,7 @@
     justify-content: space-between;
     gap: 25px;
     margin-bottom: 20px;
+    border-radius: 5px;
 }
 
 .locations {
@@ -414,5 +415,6 @@
     .btn-reset {
         font-size: 16px;
         padding: 10px;
+        height: 65px;
     }
 }
