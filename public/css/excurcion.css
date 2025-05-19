@@ -415,6 +415,9 @@
     .btn-reset {
         font-size: 16px;
         padding: 10px;
-        height: 65px;
+    }
+
+        .btn-reset {
+        height: 40px;
     }
 }
