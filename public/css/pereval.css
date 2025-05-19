@@ -368,3 +368,15 @@ img {
   }
 
 }
+
+
+@media (max-width: 500px) {
+  .pereval-text{
+    font-size: 32px;
+    font-family: '1';
+    line-height: 30px;
+  }
+  .pereval-content{
+    padding: 0 50px;
+  }
+}
