@@ -94,7 +94,12 @@
                         <select class="locations" name="location">
                             <option value="">Все направления</option>
                             <option value="Челябинская область" {{ request('location') == 'Челябинская область' ? 'selected' : '' }}>Челябинская область</option>
-                            <!-- остальные варианты -->
+                            <option value="{Ханты-Мансийский АО" {{ request('location') == 'Ханты-Мансийский АО' ? 'selected' : '' }}>Ханты-Мансийский АО</option>
+                            <option value="Уфа" {{ request('location') == 'Уфа' ? 'selected' : '' }}>Уфа</option>
+                            <option value="Башкирия" {{ request('location') == 'Башкирия' ? 'selected' : '' }}>Башкирия</option>
+                            <option value="Сверловдская область" {{ request('location') == 'Сверловдская область' ? 'selected' : '' }}>Сверловдская область</option>
+                            <option value="Пермь" {{ request('location') == 'Пермь' ? 'selected' : '' }}>Пермь</option>
+                            <option value="Златоус" {{ request('location') == 'Златоус' ? 'selected' : '' }}>Златоус</option>
                         </select>
                     </div>
 
