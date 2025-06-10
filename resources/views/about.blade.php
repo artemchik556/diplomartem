@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/slider.css') }}">
     <link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css')}}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modal.css') }}">
 
 </head>
 
@@ -36,7 +37,9 @@
                 <li><a href="{{ url('excurcion') }}">Экскурсии</a></li>
                 <li><a href="{{ route('pereval') }}">История</a></li>
                 <li><a href="{{ route('about') }}">О нас</a></li>
-
+                <div class="application-click-1">
+                    <button id="openModalHeader" class="call-button">Оставить звонок</button>
+                </div>
                 @auth
                 @if(Auth::user()->role === 'admin')
                 <li><a href="{{ route('admin.dashboard') }}">Администрирование</a></li>
@@ -125,6 +128,7 @@
                     <p class="team-text">{{ $guide->position }}</p>
                     <p class="team-text2">{{ $guide->name }}</p>
                     <p class="team-text3">{{ $guide->description }}</p>
+                    <p class="team-text4">Стаж: {{ $guide->experience }} лет</p>
                 </div>
                 @empty
                 <p>Гидов пока нет.</p>
@@ -206,20 +210,57 @@
 
 
     </section>
+    <script src="{{ asset('js/modal.js') }}"></script>
     <script src="{{ asset('js/auth.js') }}"></script>
+    <script src="{{ asset('js/form-validation.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("consultationModal");
+            const openModalBtns = document.querySelectorAll(".call-button");
+            const closeModalBtn = document.querySelector(".close");
+            const form = document.getElementById("consultationForm");
 
-    <footer class="foote">
-        <div class="logo-foote">
-            <a href="{{ url('/') }}">
-                <img src="{{ asset('img/logo.svg') }}" alt="Твой Тур">
-            </a>
-        </div>
-        <div class="copy">
-            <img src="{{ asset('img/copy.png') }}" alt="Копирайт">
-            <p>Все права защищены</p>
-        </div>
-    </footer>
+            // Открытие модального окна при клике на любую из кнопок
+            openModalBtns.forEach(btn => {
+                btn.addEventListener("click", () => modal.style.display = "block");
+            });
 
+            // Закрытие модального окна
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener("click", () => modal.style.display = "none");
+            }
+            window.addEventListener("click", (e) => {
+                if (e.target === modal) modal.style.display = "none";
+            });
+
+            // Обработка отправки формы
+            if (form) {
+                form.addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+
+                    fetch(form.action, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                            "Accept": "application/json"
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message || "Спасибо! Мы свяжемся с вами в ближайшее время.");
+                        modal.style.display = "none";
+                        form.reset();
+                    })
+                    .catch(error => {
+                        console.error("Ошибка:", error);
+                        alert("Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.");
+                    });
+                });
+            }
+        });
+    </script>        
 
 
     <script>
@@ -240,9 +281,50 @@
             nav.classList.remove('active');
         });
     });
-</script>
+    </script>
+
+    <footer class="foote">
+        <div class="logo-foote">
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('img/logo.svg') }}" alt="Твой Тур">
+            </a>
+        </div>
+        <div class="copy">
+            <img src="{{ asset('img/copy.png') }}" alt="Копирайт">
+            <p>Все права защищены</p>
+        </div>
+    </footer>
 </body>
 @include('auth.login')
 @include('auth.register')
+
+        <div id="consultationModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Заказать консультацию</h2>
+                <form id="consultationForm" method="POST" action="{{ route('consultations.store') }}">
+                    @csrf
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Ваше имя" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Ваш email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Ваш телефон" required>
+                    </div>
+                    <button type="submit" class="submit-button">Отправить заявку</button>
+                </form>
+                <div class="features">
+                    <h3>Что вы получите:</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Бесплатную консультацию по выбору экскурсии</li>
+                        <li><i class="fas fa-check"></i> Индивидуальный подбор маршрута</li>
+                        <li><i class="fas fa-check"></i> Ответы на все ваши вопросы</li>
+                        <li><i class="fas fa-check"></i> Специальные предложения и скидки</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
 </html>

@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Pereval</title>
     <link rel="stylesheet" href="{{ asset('css/pereval.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style-main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/regist.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modal.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -26,6 +28,9 @@
                 <li><a href="{{ url('excurcion') }}">Экскурсии</a></li>
                 <li><a href="{{ route('pereval') }}">История</a></li>
                 <li><a href="{{ route('about') }}">О нас</a></li>
+                <div class="application-click-1">
+                    <button id="openModalHeader" class="call-button">Оставить звонок</button>
+                </div>
 
                 @auth
                 @if(Auth::user()->role === 'admin')
@@ -55,6 +60,7 @@
             <div class="pereval-texts">
                 <p>Один из самых загадочных мест Урала, где время словно застыло<br> Ледяной ветер, бескрайние просторы и история, окутанная тайной<br> Здесь природа хранит свои тайны, а прошлое погружается в каждый<br> порыв ветра…</p>
             </div>
+        <button class="button-forum" >Перейти к форуму</button>
         </div>
     </section>
 
@@ -372,6 +378,58 @@
         </section>
     </div>
 
+    <section class="forum-section" id="forum">
+        <div class="container">
+            <h2>Обсудите с нами «Тайны перевала Дятлова: загадки и гипотезы»</h2>
+            
+            @auth
+                <form action="{{ route('questions.store') }}" method="POST" class="question-form">
+                    @csrf
+                    <div class="form-group">
+                        <textarea name="content" placeholder="Задайте свой вопрос..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-buttons">Отправить вопрос</button>
+                </form>
+            @else
+                <p class="auth-notice">Чтобы задать вопрос, пожалуйста, <a href="javascript:void(0);" onclick="openPopup('login-popup')">войдите</a> или <a href="javascript:void(0);" onclick="openPopup('register-popup')">зарегистрируйтесь</a>.</p>
+            @endauth
+
+            <div class="questions-list">
+                @foreach($questions as $question)
+                    <div class="question-block">
+                        <div class="question-header">
+                            <span class="question-author">{{ $question->user->name }}</span>
+                            <span class="question-date">{{ $question->created_at->format('d.m.Y H:i') }}</span>
+                        </div>
+                        <div class="question-content">{{ $question->content }}</div>
+                        
+                        <div class="comments-list">
+                            @foreach($question->comments as $comment)
+                                <div class="comment">
+                                    <div class="comment-header">
+                                        <span class="comment-author">{{ $comment->user->name }}</span>
+                                        <span class="comment-date">{{ $comment->created_at->format('d.m.Y H:i') }}</span>
+                                    </div>
+                                    <div class="comment-content">{{ $comment->content }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        @auth
+                            <form action="{{ route('comments.store', $question->id) }}" method="POST" class="comment-form" data-question-id="{{ $question->id }}">
+                                @csrf
+                                <div class="form-group">
+                                    <textarea name="content" placeholder="Оставить комментарий..." required></textarea>
+                                </div>
+                                <button type="submit" class="submit-buttons">Отправить комментарий</button>
+                            </form>
+                        @endauth
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     <footer class="foote">
             <div class="logo-foote">
                 <a href="{{ url('/') }}">
@@ -387,9 +445,104 @@
 
     <script src="{{ asset('js/pereval.js')}}"></script>
     <script src="{{ asset('js/auth.js') }}"></script>
+    <script src="{{ asset('js/modal.js') }}"></script>
+    <script src="{{ asset('js/comments.js') }}"></script>
+    <script src="{{ asset('js/form-validation.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Обработчик для кнопки перехода к форуму
+            const forumButton = document.querySelector('.button-forum');
+            if (forumButton) {
+                forumButton.addEventListener('click', function() {
+                    const forumSection = document.getElementById('forum');
+                    forumSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                });
+            }
+
+            const modal = document.getElementById("consultationModal");
+            const openModalBtns = document.querySelectorAll(".call-button");
+            const closeModalBtn = document.querySelector(".close");
+            const form = document.getElementById("consultationForm");
+
+            // Открытие модального окна при клике на любую из кнопок
+            openModalBtns.forEach(btn => {
+                btn.addEventListener("click", () => modal.style.display = "block");
+            });
+
+            // Закрытие модального окна
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener("click", () => modal.style.display = "none");
+            }
+            window.addEventListener("click", (e) => {
+                if (e.target === modal) modal.style.display = "none";
+            });
+
+            // Обработка отправки формы
+            if (form) {
+                form.addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+
+                    fetch(form.action, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                            "Accept": "application/json"
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message || "Спасибо! Мы свяжемся с вами в ближайшее время.");
+                        modal.style.display = "none";
+                        form.reset();
+                    })
+                    .catch(error => {
+                        console.error("Ошибка:", error);
+                        alert("Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.");
+                    });
+                });
+            }
+        });
+    </script>   
 
 </body>
 @include('auth.login')
 @include('auth.register')
+
+
+
+        <div id="consultationModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Заказать консультацию</h2>
+                <form id="consultationForm" method="POST" action="{{ route('consultations.store') }}">
+                    @csrf
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Ваше имя" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Ваш email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Ваш телефон" required>
+                    </div>
+                    <button type="submit" class="submit-button">Отправить заявку</button>
+                </form>
+                <div class="features">
+                    <h3>Что вы получите:</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Бесплатную консультацию по выбору экскурсии</li>
+                        <li><i class="fas fa-check"></i> Индивидуальный подбор маршрута</li>
+                        <li><i class="fas fa-check"></i> Ответы на все ваши вопросы</li>
+                        <li><i class="fas fa-check"></i> Специальные предложения и скидки</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
 </html>

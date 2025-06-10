@@ -16,7 +16,7 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <form action="{{ route('admin.guides.store') }}" method="POST" enctype="multipart/form-data">
+    <form class="gid" action="{{ route('admin.guides.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         
         <div class="mb-3">
@@ -47,6 +47,14 @@
             <label for="description" class="form-label">Описание</label>
             <textarea class="form-control" id="description" name="description" rows="3">{{ old('description') }}</textarea>
             @error('description')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="experience" class="form-label">Стаж работы (в годах)</label>
+            <input type="number" class="form-control" id="experience" name="experience" value="{{ old('experience') }}" min="0" step="1">
+            @error('experience')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>

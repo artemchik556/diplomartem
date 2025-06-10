@@ -61,7 +61,7 @@ body {
 .nav a {
     text-decoration: none;
     color: white;
-    font-size: 20px;
+    font-size: 22px;
     font-family: 'InterLight';
     transition: color 0.3s;
 }
@@ -71,7 +71,7 @@ body {
 }
 
 .login a {
-    font-size: 20px;
+    font-size: 22px;
     color: white;
     text-decoration: none;
     font-family: 'InterLight';
@@ -85,7 +85,7 @@ body {
 .user {
     padding: 5px;
     font-family: 'InterMedium';
-    font-size: 20px;
+    font-size: 22px;
     color: white;
     margin-right: 15px;
 }
@@ -93,7 +93,7 @@ body {
 /* Основной контейнер с двумя колонками */
 .excursion-wrapper {
     max-width: 1440px;
-    margin: 140px auto 100px; /* Отступ сверху для шапки */
+    margin: 140px auto 50px; /* Отступ сверху для шапки */
     padding: 50px 20px;
     display: flex;
     gap: 40px;
@@ -148,7 +148,7 @@ body {
 }
 
 .excursion-section p {
-    font-size: 16px;
+    font-size: 24px;
     color: #666;
 }
 
@@ -161,7 +161,7 @@ body {
 
 .transport-method h3 {
     font-family: 'InterMedium';
-    font-size: 18px;
+    font-size: 21px;
     color: #333;
     margin-bottom: 5px;
     display: flex;
@@ -170,7 +170,7 @@ body {
 }
 
 .transport-method p {
-    font-size: 16px;
+    font-size: 24px;
     color: #666;
 }
 
@@ -185,7 +185,7 @@ body {
 
 .guide-info h3 {
     font-family: 'InterSemiBold';
-    font-size: 18px;
+    font-size: 27px;
     color: #333;
     margin-bottom: 10px;
     display: flex;
@@ -194,7 +194,7 @@ body {
 }
 
 .guide-info p {
-    font-size: 16px;
+    font-size: 24px;
     color: #666;
 }
 
@@ -202,7 +202,7 @@ body {
 
 
 .form-group label {
-    font-size: 16px;
+    font-size: 24px;
     color: #333;
     display: block;
     margin-bottom: 10px;

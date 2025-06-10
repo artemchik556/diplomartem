@@ -1,0 +1,212 @@
+@font-face {
+    font-family: 'FranklinGothic';
+    src: url('../fonts/franklingothic_demi.ttf');
+}
+
+@font-face {
+    font-family: 'InterLight';
+    src: url('../fonts/Inter-Light.otf');
+}
+
+@font-face {
+    font-family: 'InterMedium';
+    src: url('../fonts/Inter-Medium.otf');
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('../fonts/Inter-SemiBold.otf');
+}
+
+.call-button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clicks{
+    background-color: transparent;
+    font-size: 24px;
+    padding: 25px 40px;
+    color: white;
+    font-family: '3';
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    
+}
+
+.application-click-1 button {
+    font-family: '4';
+    width: 270px;
+    padding: 15px 15px;
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 30;
+    border: 3px solid #ffffff;
+}
+
+.application-click-1 button:hover{
+    background-color: #F8B13C;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.3s ease;
+}
+
+.modal-content h2{
+    font-size: 32px;
+    font-family: '4';
+    color: rgb(0, 0, 0);
+    padding-bottom: 25px;
+}
+
+.modal-content p{
+    font-size: 15px;
+    font-family: '2';
+    color: white;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 17px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 18px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #F8B13C;
+    outline: none;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, #F8B13C, #F8B13C);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 22px;
+    font-family: 'InterSemiBold';
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    background: linear-gradient(45deg, #F8B13C, #F8B13C);
+    transform: translateY(-2px);
+}
+
+.features {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.features h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-family: 'InterLight';
+    text-align: center;
+    font-size: 21px;
+}
+
+.features ul {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    list-style: none;
+    padding: 0;
+    font-family: 'InterLight';
+
+}
+
+.features li {
+    margin-bottom: 10px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.features li i {
+    color: #2196F3;
+    margin-right: 10px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        padding: 20px;
+    }
+
+    .call-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+} 

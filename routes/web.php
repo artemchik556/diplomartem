@@ -10,12 +10,14 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RoutePointController;
 use App\Http\Controllers\CallRequestController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\CommentController;
+use App\Models\Question;
 
 // Публичные маршруты (доступны всем)
-Route::get('/', function () {
-    return view('index');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 
@@ -39,7 +41,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
-Route::get('/pereval', [RoutePointController::class, 'index'])->name('pereval');
+Route::get('/pereval', function () {
+    $questions = Question::with('user', 'comments.user')->latest()->get();
+    return view('pereval', compact('questions'));
+})->name('pereval');
+
+Route::post('/questions', [QuestionController::class, 'store'])
+    ->name('questions.store')
+    ->middleware('auth');
+Route::post('/questions/{question}/comments', [CommentController::class, 'store'])
+    ->name('comments.store')
+    ->middleware('auth');
 
 // Аутентификация
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -68,6 +80,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::put('/excursions/{excursion}', [ExcursionController::class, 'update'])->name('admin.excursions.update');
         Route::delete('/excursions/{excursion}', [ExcursionController::class, 'destroy'])->name('admin.excursions.destroy');
 
+        Route::delete('/excursions/{excursion}/photos/{photo}', [ExcursionController::class, 'deletePhoto'])->name('admin.excursions.photos.delete');
+
         // Управление консультациями
         Route::get('/consultations', [ConsultationController::class, 'index'])->name('admin.consultations.index');
         Route::put('/consultations/{consultation}', [ConsultationController::class, 'update'])->name('admin.consultations.update');
@@ -88,7 +102,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/route-points/{routePoint}', [RoutePointController::class, 'destroy'])->name('route-points.destroy');
 });
 
-
 Route::post('/clear-discount-session', [BookingController::class, 'clearDiscountSession'])->name('clear.discount.session');
+
+Route::post('/excursion/{excursion}/rate', [ExcursionController::class, 'storeRating'])->name('excursion.rate');
 
 

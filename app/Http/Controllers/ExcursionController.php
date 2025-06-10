@@ -16,45 +16,46 @@ class ExcursionController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Excursion::query()->with('guide');
+        $query = Excursion::query()->with(['reviews' => function($q) {
+            $q->where('is_approved', true)
+              ->whereNotNull('rating')
+              ->where('rating', '>', 0);
+        }]);
 
-        // Применяем фильтры
-        if ($request->has('search') && !empty($request->search)) {
-            $query->where('title', 'like', '%'.$request->search.'%');
+        // Поиск по названию
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('min_price') && is_numeric($request->min_price)) {
+        // Фильтрация по цене
+        if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
-
-        if ($request->has('max_price') && is_numeric($request->max_price)) {
+        if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
 
-        if ($request->has('location') && !empty($request->location)) {
+        // Фильтрация по направлению
+        if ($request->filled('location')) {
             $query->where('location', $request->location);
         }
 
-        // Фильтрация по сезону
-        if ($request->has('season') && !empty($request->season)) {
-            $query->where(function($q) use ($request) {
-                switch ($request->season) {
+        // Фильтрация по сезону через месяц даты
+        if ($request->filled('season')) {
+            $season = $request->season;
+            $query->where(function($q) use ($season) {
+                switch ($season) {
                     case 'winter':
-                        // Зима: декабрь, январь, февраль
-                        $q->whereMonth('start_date', '>=', 12)
-                        ->orWhereMonth('start_date', '<=', 2);
+                        $q->whereIn(\DB::raw('MONTH(start_date)'), [12, 1, 2]);
                         break;
                     case 'spring':
-                        // Весна: март, апрель, май
-                        $q->whereBetween(\DB::raw('MONTH(start_date)'), [3, 5]);
+                        $q->whereIn(\DB::raw('MONTH(start_date)'), [3, 4, 5]);
                         break;
                     case 'summer':
-                        // Лето: июнь, июль, август
-                        $q->whereBetween(\DB::raw('MONTH(start_date)'), [6, 8]);
+                        $q->whereIn(\DB::raw('MONTH(start_date)'), [6, 7, 8]);
                         break;
                     case 'autumn':
-                        // Осень: сентябрь, октябрь, ноябрь
-                        $q->whereBetween(\DB::raw('MONTH(start_date)'), [9, 11]);
+                        $q->whereIn(\DB::raw('MONTH(start_date)'), [9, 10, 11]);
                         break;
                 }
             });
@@ -62,28 +63,39 @@ class ExcursionController extends Controller
 
         // Сортировка
         if ($request->has('sort')) {
-            $sortOrder = $request->sort === 'asc' ? 'asc' : 'desc';
-            $query->orderBy('price', $sortOrder);
-        } else {
-            $query->latest();
-        }
-
-        // Остальной код остается без изменений
-        if ($request->ajax()) {
-            $excursions = $query->paginate(9);
-            
-            $html = '';
-            foreach ($excursions as $excursion) {
-                $html .= view('partials.excursion_item', ['excursion' => $excursion])->render();
+            switch ($request->sort) {
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'rating_desc':
+                    $query->withAvg(['reviews' => function($q) {
+                        $q->where('is_approved', true)
+                          ->whereNotNull('rating')
+                          ->where('rating', '>', 0);
+                    }], 'rating')->orderBy('reviews_avg_rating', 'desc');
+                    break;
+                case 'rating_asc':
+                    $query->withAvg(['reviews' => function($q) {
+                        $q->where('is_approved', true)
+                          ->whereNotNull('rating')
+                          ->where('rating', '>', 0);
+                    }], 'rating')->orderBy('reviews_avg_rating', 'asc');
+                    break;
+                default:
+                    $query->orderBy('price', 'asc');
             }
-            
-            return response()->json([
-                'html' => $html,
-                'hasMore' => $excursions->hasMorePages()
-            ]);
         }
 
         $excursions = $query->paginate(9);
+
+        if ($request->ajax()) {
+            $html = view('partials.excursion-cards', compact('excursions'))->render();
+            return response()->json(['html' => $html, 'hasMore' => $excursions->hasMorePages()]);
+        }
+
         return view('excursion', compact('excursions'));
     }
 
@@ -103,8 +115,7 @@ class ExcursionController extends Controller
                 'end_date' => 'required|date_format:Y-m-d\TH:i|after:start_date',
                 'price' => 'required|numeric|min:0',
                 'preparation_level' => 'required|in:easy,medium,hard',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'detail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'photos.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // Множественная загрузка
                 'group_a_seats' => 'required|integer|min:1',
                 'group_b_seats' => 'required|integer|min:1',
                 'group_c_seats' => 'required|integer|min:1',
@@ -115,20 +126,21 @@ class ExcursionController extends Controller
                 'transport_train' => 'nullable|string',
             ]);
 
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('excursions', 'public');
-                $validated['image'] = $imagePath;
-            }
-
-            if ($request->hasFile('detail_image')) {
-                $detailImagePath = $request->file('detail_image')->store('excursions', 'public');
-                $validated['detail_image'] = $detailImagePath;
-            }
-
             $validated['start_date'] = Carbon::parse($request->start_date)->format('Y-m-d H:i:s');
             $validated['end_date'] = Carbon::parse($request->end_date)->format('Y-m-d H:i:s');
 
-            Excursion::create($validated);
+            $excursion = Excursion::create($validated);
+
+            // Сохранение фотографий
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $index => $photo) {
+                    $path = $photo->store('excursions', 'public');
+                    $excursion->photos()->create([
+                        'photo_path' => $path,
+                        'is_preview' => $index === 0, // Первое фото становится превью
+                    ]);
+                }
+            }
 
             return redirect()->route('admin.excursions.index')
                 ->with('success', 'Экскурсия успешно добавлена');
@@ -165,8 +177,8 @@ class ExcursionController extends Controller
                 'start_date' => 'required|date_format:Y-m-d\TH:i',
                 'end_date' => 'required|date_format:Y-m-d\TH:i|after:start_date',
                 'location' => 'required|string|max:191',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'detail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // Множественная загрузка
+                'remove_photos' => 'array', // Для удаления существующих фото
                 'transport_car' => 'nullable|string',
                 'transport_bus' => 'nullable|string',
                 'transport_train' => 'nullable|string',
@@ -177,24 +189,33 @@ class ExcursionController extends Controller
                 'group_c_seats' => 'required|integer|min:1',
             ]);
 
-            if ($request->hasFile('image')) {
-                if ($excursion->image) {
-                    Storage::disk('public')->delete($excursion->image);
-                }
-                $validated['image'] = $request->file('image')->store('excursions', 'public');
-            }
-
-            if ($request->hasFile('detail_image')) {
-                if ($excursion->detail_image) {
-                    Storage::disk('public')->delete($excursion->detail_image);
-                }
-                $validated['detail_image'] = $request->file('detail_image')->store('excursions', 'public');
-            }
-
             $validated['start_date'] = Carbon::parse($request->start_date)->format('Y-m-d H:i:s');
             $validated['end_date'] = Carbon::parse($request->end_date)->format('Y-m-d H:i:s');
 
             $excursion->update($validated);
+
+            // Удаление выбранных фотографий
+            if ($request->has('remove_photos')) {
+                foreach ($request->remove_photos as $photoId) {
+                    $photo = $excursion->photos()->find($photoId);
+                    if ($photo) {
+                        Storage::disk('public')->delete($photo->photo_path);
+                        $photo->delete();
+                    }
+                }
+            }
+
+            // Добавление новых фотографий
+            if ($request->hasFile('photos')) {
+                $hasPreview = $excursion->photos()->where('is_preview', true)->exists();
+                foreach ($request->file('photos') as $index => $photo) {
+                    $path = $photo->store('excursions', 'public');
+                    $excursion->photos()->create([
+                        'photo_path' => $path,
+                        'is_preview' => !$hasPreview && $index === 0, // Устанавливаем превью, если его нет
+                    ]);
+                }
+            }
 
             return redirect()->route('admin.excursions.index')
                 ->with('success', 'Экскурсия успешно обновлена');
@@ -214,17 +235,15 @@ class ExcursionController extends Controller
     {
         try {
             $excursion = Excursion::findOrFail($id);
-            
-            // Удаляем изображения
-            if ($excursion->image) {
-                Storage::disk('public')->delete($excursion->image);
+
+            // Удаление всех фотографий экскурсии
+            foreach ($excursion->photos as $photo) {
+                Storage::disk('public')->delete($photo->photo_path);
             }
-            if ($excursion->detail_image) {
-                Storage::disk('public')->delete($excursion->detail_image);
-            }
-            
+            $excursion->photos()->delete();
+
             $excursion->delete();
-            
+
             return redirect()->route('admin.excursions.index')
                 ->with('success', 'Экскурсия успешно удалена');
         } catch (\Exception $e) {
@@ -238,79 +257,73 @@ class ExcursionController extends Controller
     }
 
     public function book(Request $request, Excursion $excursion)
-        {
-            try {
-                $validated = $request->validate([
-                    'group_type' => 'required|in:a,b,c',
-                    'number_of_people' => 'required|integer|min:1|max:10',
-                    'excursion_date' => [
-                        'required',
-                        'date',
-                        'after_or_equal:' . $excursion->start_date->format('Y-m-d'),
-                        'before_or_equal:' . $excursion->end_date->format('Y-m-d')
-                    ]
-                ]);
+    {
+        try {
+            $validated = $request->validate([
+                'group_type' => 'required|in:a,b,c',
+                'number_of_people' => 'required|integer|min:1|max:10',
+                'excursion_date' => [
+                    'required',
+                    'date',
+                    'after_or_equal:' . $excursion->start_date->format('Y-m-d'),
+                    'before_or_equal:' . $excursion->end_date->format('Y-m-d')
+                ]
+            ]);
 
-                // Проверяем доступность мест
-                $availableSeats = $excursion->availableSeats($validated['group_type']);
-                if ($availableSeats < $validated['number_of_people']) {
-                    return back()->with('error', 'К сожалению, в выбранной группе недостаточно свободных мест.');
-                }
-
-                // Расчет скидки
-                $discount = 0;
-                $discountAmount = 0;
-                $finalPrice = $excursion->price * $validated['number_of_people'];
-                
-                if ($validated['number_of_people'] >= 5) {
-                    $discount = 10;
-                    $discountAmount = $finalPrice * $discount / 100;
-                    $finalPrice = $finalPrice - $discountAmount;
-                }
-
-                // Создаем бронирование
-                $booking = Booking::create([
-                    'user_id' => Auth::id(),
-                    'excursion_id' => $excursion->id,
-                    'group_type' => $validated['group_type'],
-                    'number_of_people' => (int)$validated['number_of_people'],
-                    'booking_date' => Carbon::parse($validated['excursion_date'])->format('Y-m-d'),
-                    'status' => 'pending',
-                    'discount' => $discount,
-                    'discount_amount' => $discountAmount,
-                    'final_price' => $finalPrice,
-                    'name' => Auth::user()->name,
-                ]);
-
-                // Обновляем количество доступных мест
-                $seatsField = "group_{$validated['group_type']}_seats";
-                $excursion->$seatsField = $availableSeats - $validated['number_of_people'];
-                $excursion->save();
-
-                // Если скидка применена, добавляем флаг для показа попапа
-                if ($discount > 0) {
-                    return back()->with([
-                        'success' => 'Экскурсия успешно забронирована. Статус бронирования можно отследить в личном кабинете.',
-                        'show_discount' => true,
-                        'original_price' => $excursion->price * $validated['number_of_people'],
-                        'discount_amount' => $discountAmount,
-                        'final_price' => $finalPrice
-                    ]);
-                }
-
-                return back()->with('success', 'Экскурсия успешно забронирована. Статус бронирования можно отследить в личном кабинете.');
-            } catch (\Exception $e) {
-                \Log::error('Ошибка при создании бронирования:', [
-                    'message' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
-                    'trace' => $e->getTraceAsString(),
-                    'request_data' => $request->all()
-                ]);
-
-                return back()->with('error', 'Произошла ошибка при бронировании: ' . $e->getMessage());
+            // Проверяем доступность мест на конкретную дату
+            $availableSeats = $excursion->availableSeats($validated['group_type'], $validated['excursion_date']);
+            if ($availableSeats < $validated['number_of_people']) {
+                return back()->with('error', 'К сожалению, в выбранной группе недостаточно свободных мест на указанную дату.');
             }
+
+            // Расчет скидки
+            $discount = 0;
+            $discountAmount = 0;
+            $finalPrice = $excursion->price * $validated['number_of_people'];
+
+            if ($validated['number_of_people'] >= 5) {
+                $discount = 10;
+                $discountAmount = $finalPrice * $discount / 100;
+                $finalPrice = $finalPrice - $discountAmount;
+            }
+
+            // Создаем бронирование
+            $booking = Booking::create([
+                'user_id' => Auth::id(),
+                'excursion_id' => $excursion->id,
+                'group_type' => $validated['group_type'],
+                'number_of_people' => (int)$validated['number_of_people'],
+                'booking_date' => Carbon::parse($validated['excursion_date'])->format('Y-m-d'),
+                'status' => 'pending',
+                'discount' => $discount,
+                'discount_amount' => $discountAmount,
+                'final_price' => $finalPrice,
+            ]);
+
+            // Если скидка применена, добавляем флаг для показа попапа
+            if ($discount > 0) {
+                return back()->with([
+                    'success' => 'Экскурсия успешно забронирована. Статус бронирования можно отследить в личном кабинете.',
+                    'show_discount' => true,
+                    'original_price' => $excursion->price * $validated['number_of_people'],
+                    'discount_amount' => $discountAmount,
+                    'final_price' => $finalPrice
+                ]);
+            }
+
+            return back()->with('success', 'Экскурсия успешно забронирована. Статус бронирования можно отследить в личном кабинете.');
+        } catch (\Exception $e) {
+            \Log::error('Ошибка при создании бронирования:', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+
+            return back()->with('error', 'Произошла ошибка при бронировании: ' . $e->getMessage());
         }
+    }
 
     public function adminPanel(Request $request)
     {
@@ -379,5 +392,25 @@ class ExcursionController extends Controller
                 ->route('admin.dashboard')
                 ->with('error', 'Произошла ошибка при загрузке админ панели. Пожалуйста, попробуйте позже.');
         }
+    }
+
+    public function storeRating(Request $request, Excursion $excursion)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'nullable|string|max:1000'
+        ]);
+
+        $review = $excursion->reviews()->create([
+            'user_id' => auth()->id(),
+            'rating' => $request->rating,
+            'comment' => $request->review,
+            'is_approved' => true // Автоматически одобряем отзывы с рейтингом
+        ]);
+
+        return response()->json([
+            'message' => 'Отзыв успешно добавлен',
+            'average_rating' => $excursion->average_rating
+        ]);
     }
 }

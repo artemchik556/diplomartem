@@ -49,11 +49,19 @@ h3 {
 /* Стили для форм */
 form {
     background-color: #ffffff;
-    
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
  /* Ограничение ширины формы для читабельности */
+}
+
+.gid{
+    padding: 15px;
+}
+
+
+.btn-info{
+    margin-bottom: 5px;
 }
 
 .dalet{
@@ -261,4 +269,46 @@ input:focus, textarea:focus, select:focus {
         flex-direction: column;
         gap: 5px;
     }
+}
+
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.photo-item {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background: #f9f9f9;
+}
+
+.photo-item img {
+    border-radius: 5px;
+}
+
+.photo-actions {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.photo-actions label {
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #dc3545;
+    cursor: pointer;
+}
+
+.photo-actions input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.badge {
+    font-size: 12px;
+    padding: 5px 10px;
 }

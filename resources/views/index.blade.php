@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('css/regist.css') }}">
     <link rel="stylesheet" href="{{ asset('css/modul.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modal.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -34,6 +36,37 @@
                 <li><a href="{{ url('excurcion') }}">Экскурсии</a></li>
                 <li><a href="{{ route('pereval') }}">История</a></li>
                 <li><a href="{{ route('about') }}">О нас</a></li>
+                <div class="application-click-1">
+                    <button id="openModalHeader" class="call-button">Оставить звонок</button>
+                </div>
+                <div id="consultationModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">×</span>
+                        <h2>Заказать консультацию</h2>
+                        <form id="consultationForm" method="POST" action="{{ route('consultations.store') }}">
+                            @csrf
+                            <div class="form-group">
+                                <input type="text" id="name" name="name" placeholder="Ваше имя" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="email" name="email" placeholder="Ваш email" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" id="phone" name="phone" placeholder="Ваш телефон" required>
+                            </div>
+                            <button type="submit" class="submit-button">Отправить заявку</button>
+                        </form>
+                        <div class="features">
+                            <h3>Что вы получите:</h3>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Бесплатную консультацию по выбору экскурсии</li>
+                                <li><i class="fas fa-check"></i> Индивидуальный подбор маршрута</li>
+                                <li><i class="fas fa-check"></i> Ответы на все ваши вопросы</li>
+                                <li><i class="fas fa-check"></i> Специальные предложения и скидки</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
                 @auth
                 @if(Auth::user()->role === 'admin')
@@ -58,7 +91,6 @@
         </div>
     </header>
 
-
     <section class="hero">
         <div class="hero-content">
             <h2>ПОКОРИ ВЕРШИНЫ ГОР</h2>
@@ -69,7 +101,7 @@
     <!-- Поп-ап окно авторизации -->
     <div id="auth-popup" class="popup">
         <div class="popup-content">
-            <span class="close" id="close-popup">&times;</span>
+            <span class="close" id="close-popup">×</span>
             <div class="tabs">
                 <button class="tab-link active" id="tab-register">Регистрация</button>
                 <button class="tab-link" id="tab-login">Войти</button>
@@ -96,17 +128,25 @@
     </div>
 
     @php
-    $excursions = App\Models\Excursion::latest()->take(4)->get();
+    // Удаляем этот блок, так как теперь используем $popularExcursions из контроллера
+    // $excursions = App\Models\Excursion::latest()->take(4)->get();
     @endphp
 
-
-    <h2 class="header2">Куда идти сейчас?</h2>
+    <h2 class="header2">Популярные экскурсии</h2>
     <section class="cads-block">
-        @foreach ($excursions as $excursion)
+        @foreach ($popularExcursions as $excursion)
         <a href="{{ route('excursion.detail', $excursion->id) }}" class="cards-link">
             <div class="cards">
                 <div class="excursion-card">
-                    <img class="size" src="{{ asset('storage/' . $excursion->image) }}" alt="{{ $excursion->title }}">
+                    <div class="rating-badge">
+                        <span class="rating-number">{{ number_format($excursion->average_rating, 1) }}</span>
+                        <div class="stars">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="fas fa-star {{ $i <= round($excursion->average_rating) ? 'active' : '' }}"></i>
+                            @endfor
+                        </div>
+                    </div>
+                    <img class="size" src="{{ $excursion->previewPhoto() ? asset('storage/' . $excursion->previewPhoto()->photo_path) : asset('img/placeholder.jpg') }}" alt="{{ $excursion->title }}">
                     <div class="card-texts">
                         <div class="card-text">
                             <h3>{{ $excursion->title }}</h3>
@@ -130,8 +170,8 @@
                         <p>Если у Вас есть вопросы или сомнения - оставьте заявку</p>
                         <p>НА БЕСПЛАТНУЮ КОНСУЛЬТАЦИЮ С НАШИМ ГИДОМ!</p>
                     </div>
-                    <div class="application-click">
-                        <button id="openModal">Оставить звонок</button>
+                    <div class="application-click-2">
+                        <button id="openModalMain" class="clicks">Оставить звонок</button>
                     </div>
                 </div>
                 <div id="consultationModal" class="modal">
@@ -193,8 +233,6 @@
             </div>
         </div>
 
-
-
         <div class="fag">
             <div class="faq-container">
                 <h2 class="header3">Ответы на частые вопросы</h2>
@@ -203,7 +241,7 @@
                         Где находится офис вашей компании?
                         <span class="faq-toggle">+</span>
                     </div>
-                    <div class="faq-answer">Офис находится в городе Барнаул, мы работаем дистанционно, а представители каждого региона живут в городах своего направления.</div>
+                    <div class="faq-answer">Офис находится в городе Набережные Челны, мы работаем дистанционно так же ждем вас у нас, а представители каждого региона живут в городах своего направления.</div>
                 </div>
 
                 <div class="faq-item">
@@ -227,7 +265,7 @@
                         Сколько предоплата?
                         <span class="faq-toggle">+</span>
                     </div>
-                    <div class="faq-answer">Предоплата составляет 20% от стоимости тура на человека.</div>
+                    <div class="faq-answer">У нас нету пред оплаты, оплата экскурсии у нас в офисе или через гида.</div>
                 </div>
 
                 <div class="faq-item">
@@ -243,7 +281,7 @@
                         Как осуществляется бронирование?
                         <span class="faq-toggle">+</span>
                     </div>
-                    <div class="faq-answer">Для бронирования тура мы отправляем ссылку на форму, где нужно будет внести свои паспортные данные для договора. Договор придет на вашу электронную почту, вместе со ссылкой для оплаты.</div>
+                    <div class="faq-answer">Для бронирования тура нужно будет внести свои данные и данные о экскурсии на сайте в разделе экскурсии и выбрав экскурсию.</div>
                 </div>
 
                 <div class="faq-item">
@@ -251,7 +289,7 @@
                         Как с нами связаться?
                         <span class="faq-toggle">+</span>
                     </div>
-                    <div class="faq-answer">связаться с нами можно по номеру телефона, электронной почте а так же посетить нас лично по адресу: Набережные Челны 56/04A</div>
+                    <div class="faq-answer">Связаться с нами можно по номеру телефона, электронной почте а так же посетить нас лично по адресу: Набережные Челны 56/04A</div>
                 </div>
 
                 <div class="faq-item">
@@ -261,11 +299,8 @@
                     </div>
                     <div class="faq-answer">Безопасность — наш главный приоритет. Мы тщательно разрабатываем маршруты, ближайшие погодные условия, сложность местности и уровень подготовки участника.</div>
                 </div>
-
             </div>
         </div>
-
-
     </div>
 
     <footer class="foote">
@@ -283,6 +318,7 @@
     <script src="{{ asset('js/auth.js') }}"></script>
     <script src="{{ asset('js/question.js') }}"></script>
     <script src="{{ asset('js/modal.js') }}"></script>
+    <script src="{{ asset('js/form-validation.js') }}"></script>
     <script>
         // Get modal elements
         const modal = document.getElementById('consultationModal');
@@ -414,10 +450,10 @@
 
     .form-group input {
         width: 100%;
-        padding: 8px;
+        padding: 10px;
         border: 1px solid #ddd;
         border-radius: 4px;
-        font-size: 16px;
+        box-sizing: border-box;
     }
 
     .form-group input:focus {
@@ -458,6 +494,41 @@
         color: #F8B13C;
         position: absolute;
         left: 0;
+    }
+
+    .rating-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 5px 10px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        z-index: 1;
+    }
+
+    .rating-number {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    .stars {
+        display: flex;
+        gap: 2px;
+    }
+
+    .stars i {
+        color: #ddd;
+    }
+
+    .stars i.active {
+        color: #ffd700;
+    }
+
+    .excursion-card {
+        position: relative;
     }
 </style>
 

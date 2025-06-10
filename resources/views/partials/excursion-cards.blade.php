@@ -1,7 +1,16 @@
+@foreach ($excursions as $excursion)
 <a href="{{ route('excursion.detail', $excursion->id) }}" class="cards-link">
     <div class="cards">
         <div class="excursion-card">
-            <img class="size" src="{{ asset('storage/' . $excursion->image) }}" alt="{{ $excursion->title }}">
+            <div class="rating-badge">
+                <span class="rating-number">{{ number_format($excursion->average_rating, 1) }}</span>
+                <div class="stars">
+                    @for($i = 1; $i <= 5; $i++)
+                        <i class="fas fa-star {{ $i <= round($excursion->average_rating) ? 'active' : '' }}"></i>
+                    @endfor
+                </div>
+            </div>
+            <img class="size" src="{{ $excursion->previewPhoto() ? asset('storage/' . $excursion->previewPhoto()->photo_path) : asset('img/placeholder.jpg') }}" alt="{{ $excursion->title }}">
             <div class="card-texts">
                 <div class="card-text">
                     <h3>{{ $excursion->title }}</h3>
@@ -15,3 +24,4 @@
         </div>
     </div>
 </a>
+@endforeach 

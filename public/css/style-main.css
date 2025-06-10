@@ -50,13 +50,14 @@
 .nav ul {
     list-style: none;
     display: flex;
+    align-items: center;
     gap: 50px;
 }
 
 .nav a {
     text-decoration: none;
     color: white;
-    font-size: 20px;
+    font-size: 22px;
     font-family: '2';
     transition: color 0.3s ease;
 }
@@ -66,7 +67,7 @@
 }
 
 .login a {
-    font-size: 20px;
+    font-size: 22px;
     color: white;
     text-decoration: none;
     font-family: '2';
@@ -80,7 +81,7 @@
 .user {
     padding: 5px;
     font-family: '3';
-    font-size: 20px;
+    font-size: 22px;
     color: black;
     transition: color 0.3s ease;
 }
@@ -189,6 +190,7 @@
     height: 344px;
     object-fit: cover;
     display: block;
+    border-radius: 5px;
 }
 
 .card-text {
@@ -302,6 +304,17 @@
     border: 1px solid #CFCFCF;
 }
 
+.application-click-1 button {
+    font-family: '4';
+    width: 270px;
+    padding: 15px 15px;
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 30;
+    border: 3px solid #ffffff;
+}
+
 .application-block2 {
     display: flex;
     justify-content: space-between;
@@ -363,6 +376,11 @@
     z-index: -10;
 }
 
+.features ul li{
+    display: flex;
+    justify-content: center;
+}
+
 
 
 .header3 {
@@ -377,7 +395,7 @@
 
 .fag {
     margin-top: 350px;
-    background: url('../img/mountion2.png') no-repeat center/cover;
+    background: url('../img/mountion2 1.png') no-repeat center/cover;
     color: white;
     display: flex;
     justify-content: center;
@@ -387,7 +405,7 @@
 .faq-container {
     margin-top: 60px;
     width: 80%;
-    padding: 20px;
+    padding: 20px 20px 0px 20px;
 }
 
 
@@ -407,19 +425,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 24px;
+    font-size: 28px;
     font-family: '3';
 }
 
 .faq-toggle {
-    font-size: 24px;
+    font-size: 28px;
     transition: transform 0.3s ease;
 }
 
 .faq-answer {
     display: none;
     padding-top: 10px;
-    font-size: 22px;
+    font-size: 27px;
     font-family: '2';
     color: #ffffff;
 }

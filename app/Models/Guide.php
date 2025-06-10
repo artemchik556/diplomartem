@@ -13,7 +13,8 @@ class Guide extends Model
         'name',
         'position',
         'description',
-        'image'
+        'image',
+        'experience',
     ];
 
     public function excursions()

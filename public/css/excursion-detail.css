@@ -11,6 +11,11 @@
     margin-bottom: 25px;
 }
 
+.excursion-title{
+    margin-bottom: 15px;
+    font-size: 36px;
+}
+
 /* Стили для уведомлений */
 .alert {
     padding: 15px;
@@ -38,7 +43,7 @@
 .excursion-section h2,
 .reviews-section h2 {
     font-family: 'InterSemiBold';
-    font-size: 22px;
+    font-size: 27px;
     color: #F8B13C;
     margin-bottom: 20px;
     display: flex;
@@ -63,7 +68,7 @@
 
 .form-group label {
     font-family: 'InterMedium';
-    font-size: 16px;
+    font-size: 21px;
     color: #333;
     display: block;
     margin-bottom: 8px;
@@ -188,7 +193,7 @@ textarea {
 }
 
 .review-content {
-    font-size: 15px;
+    font-size: 20px;
     line-height: 1.5;
     color: #444;
 }
@@ -202,7 +207,7 @@ textarea {
 /* Информация о датах */
 .date-range-info {
     margin-top: 8px;
-    font-size: 14px;
+    font-size: 20px;
     color: #666;
 }
 
@@ -404,5 +409,174 @@ textarea {
     background-color: #da982e;
 }
 
+
+.excursion-image-gallery {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.main-photo {
+    flex: 2;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.excursion-detail-image {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
+
+.side-photos {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.side-photo {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.side-photo-image {
+    width: 100%;
+    height: 242.5px; /* 500px / 2 - 15px (gap) / 2 */
+    object-fit: cover;
+}
+
+.photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-family: 'InterMedium', sans-serif;
+}
+
+.gallery-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow: auto;
+}
+
+.gallery-content {
+    position: relative;
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+.close-gallery {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.gallery-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.gallery-image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .excursion-image-gallery {
+        flex-direction: column;
+    }
+
+    .main-photo, .side-photos {
+        flex: none;
+        width: 100%;
+    }
+
+    .excursion-detail-image, .side-photo-image {
+        height: 300px;
+    }
+
+    .excursion-title{
+        margin-top: 250px;
+    }
+}
+
+/* --- Модальное окно для увеличенного фото --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.85);
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s;
+}
+.modal-content {
+    display: block;
+    margin: auto;
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    box-shadow: 0 0 40px 10px rgba(0,0,0,0.7);
+    border-radius: 10px;
+    background: #fff;
+    object-fit: contain;
+    animation: modalZoomIn 0.2s;
+    margin-top: 50px;
+}
+@keyframes modalZoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    color: #fff;
+    font-size: 48px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10000;
+    text-shadow: 0 2px 8px #000;
+}
+
+.card{
+    width: 275px;
+}
 
 

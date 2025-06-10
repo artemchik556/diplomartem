@@ -76,30 +76,32 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="image" class="form-label">Изображение (превью)</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/jpeg,image/png">
-                @if($excursion->image)
-                    <div class="mt-3">
-                        <p>Текущее изображение:</p>
-                        <img src="{{ asset('storage/' . $excursion->image) }}" width="200" class="img-thumbnail mb-2">
+            @if($excursion->photos->isNotEmpty())
+                <div class="mb-3">
+                    <label>Текущие фотографии:</label>
+                    <div class="photo-gallery">
+                        @foreach($excursion->photos as $photo)
+                            <div class="photo-item">
+                                <img src="{{ asset('storage/' . $photo->photo_path) }}" alt="Photo" width="150">
+                                <div class="photo-actions">
+                                    <input type="checkbox" name="remove_photos[]" value="{{ $photo->id }}" id="remove_photo_{{ $photo->id }}">
+                                    <label for="remove_photo_{{ $photo->id }}">Удалить</label>
+                                    @if($photo->is_preview)
+                                        <span class="badge bg-primary">Превью</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
-                @endif
-                @error('image')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
+                </div>
+            @endif
 
+    <!-- Поле для загрузки новых фотографий -->
             <div class="mb-3">
-                <label for="detail_image" class="form-label">Детальное изображение</label>
-                <input type="file" class="form-control" id="detail_image" name="detail_image" accept="image/jpeg,image/png">
-                @if($excursion->detail_image)
-                    <div class="mt-3">
-                        <p>Текущее детальное изображение:</p>
-                        <img src="{{ asset('storage/' . $excursion->detail_image) }}" width="200" class="img-thumbnail mb-2">
-                    </div>
-                @endif
-                @error('detail_image')
+                <label for="photos" class="form-label">Добавить новые фотографии</label>
+                <input type="file" class="form-control" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/jpg,image/gif">
+                <small class="form-text text-muted">Загрузите новые изображения. Первое будет использовано как превью, если его нет.</small>
+                @error('photos')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>

@@ -45,7 +45,7 @@
 }
 
 .modal-content h2{
-    font-size: 35px;
+    font-size: 32px;
     font-family: '4';
     color: rgb(0, 0, 0);
     padding-bottom: 25px;
@@ -60,10 +60,10 @@
 /* Поля ввода */
 input { 
     width: 100%; 
-    padding: 15px 20px; 
-    margin: 12px 0; 
+    padding: 20px; 
+    margin: 8px 0; 
     border: 2px solid #ccc;  
-    font-size: 16px;
+    font-size: 18px;
 }
 
 /* Кнопка отправки */

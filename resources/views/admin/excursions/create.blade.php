@@ -74,17 +74,10 @@
             </div>
 
             <div class="mb-3">
-                <label for="image" class="form-label">Изображение (превью)</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/jpeg,image/png" required>
-                @error('image')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="mb-3">
-                <label for="detail_image" class="form-label">Детальное изображение</label>
-                <input type="file" class="form-control" id="detail_image" name="detail_image" accept="image/jpeg,image/png">
-                @error('detail_image')
+                <label for="photos" class="form-label">Фотографии экскурсии (множественная загрузка)</label>
+                <input type="file" class="form-control" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/jpg,image/gif" required>
+                <small class="form-text text-muted">Загрузите одно или несколько изображений. Первое будет использовано как превью.</small>
+                @error('photos')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>

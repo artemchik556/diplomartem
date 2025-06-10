@@ -117,14 +117,10 @@
                         @error('location') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
-                        <label for="image">Основное изображение*</label>
-                        <input type="file" class="form-control-file" id="image" name="image" required>
-                        @error('image') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="detail_image">Детальное изображение:</label>
-                        <input type="file" class="form-control-file" id="detail_image" name="detail_image">
-                        @error('detail_image') <span class="text-danger">{{ $message }}</span> @enderror
+                        <label for="photos">Фотографии экскурсии (множественная загрузка)*</label>
+                        <input type="file" class="form-control" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/jpg,image/gif" required>
+                        <small class="form-text text-muted">Загрузите одно или несколько изображений. Первое будет использовано как превью.</small>
+                        @error('photos') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label for="transport_car">Как добраться на машине:</label>
@@ -231,27 +227,32 @@
                                value="{{ old('location', $excursion->location) }}" required>
                         @error('location') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                    <div class="form-group">
-                        <label for="image">Основное изображение</label>
-                        <input type="file" class="form-control-file" id="image" name="image">
-                        @if($excursion->image)
-                        <div class="current-image">
-                            <small>Текущее изображение:</small>
-                            <img src="{{ asset('storage/' . $excursion->image) }}" width="150">
+                    <!-- Отображение текущих фотографий -->
+                    @if($excursion->photos->isNotEmpty())
+                        <div class="form-group">
+                            <label>Текущие фотографии:</label>
+                            <div class="photo-gallery">
+                                @foreach($excursion->photos as $photo)
+                                    <div class="photo-item">
+                                        <img src="{{ asset('storage/' . $photo->photo_path) }}" alt="Photo" width="150">
+                                        <div class="photo-actions">
+                                            <input type="checkbox" name="remove_photos[]" value="{{ $photo->id }}" id="remove_photo_{{ $photo->id }}">
+                                            <label for="remove_photo_{{ $photo->id }}">Удалить</label>
+                                            @if($photo->is_preview)
+                                                <span class="badge bg-primary">Превью</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
-                        @endif
-                        @error('image') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
+                    @endif
+                    <!-- Поле для загрузки новых фотографий -->
                     <div class="form-group">
-                        <label for="detail_image">Детальное изображение</label>
-                        <input type="file" class="form-control-file" id="detail_image" name="detail_image">
-                        @if($excursion->detail_image)
-                        <div class="current-image">
-                            <small>Текущее изображение:</small>
-                            <img src="{{ asset('storage/' . $excursion->detail_image) }}" width="150">
-                        </div>
-                        @endif
-                        @error('detail_image') <span class="text-danger">{{ $message }}</span> @enderror
+                        <label for="photos">Добавить новые фотографии</label>
+                        <input type="file" class="form-control" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/jpg,image/gif">
+                        <small class="form-text text-muted">Загрузите новые изображения. Первое будет использовано как превью, если его нет.</small>
+                        @error('photos') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label for="transport_car">Как добраться на машине</label>
@@ -387,6 +388,7 @@
                             <tr>
                                 <th>Имя</th>
                                 <th>Должность</th>
+                                <th>Стаж (годы)</th>
                                 <th>Фото</th>
                                 <th>Действия</th>
                             </tr>
@@ -396,6 +398,7 @@
                             <tr>
                                 <td>{{ $guideItem->name }}</td>
                                 <td>{{ $guideItem->position }}</td>
+                                <td>{{ $guideItem->experience ?? 'Не указан' }}</td>
                                 <td>
                                     @if($guideItem->image)
                                         <img src="{{ asset('storage/' . $guideItem->image) }}" width="50">
@@ -679,10 +682,12 @@
         });
 
         // Подтверждение удаления фото
-        document.getElementById('remove_photo')?.addEventListener('change', function() {
-            if (this.checked && !confirm('Вы уверены, что хотите удалить фотографию?')) {
-                this.checked = false;
-            }
+        document.querySelectorAll('input[name="remove_photos[]"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked && !confirm('Вы уверены, что хотите удалить фотографию?')) {
+                    this.checked = false;
+                }
+            });
         });
 
         // Активация вкладки после загрузки страницы
@@ -696,8 +701,6 @@
                 }
             }
         });
-
-        
     </script>
 </body>
 </html>
