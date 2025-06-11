@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/modul.css') }}">
     <link rel="stylesheet" href="{{ asset('css/excursion-detail.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="{{ asset('js/booking.js') }}" defer></script>
     <script src="{{ asset('js/auth.js') }}" defer></script>
@@ -36,6 +37,29 @@
         });
     </script>
 </head>
+
+        <button id="scrollTopBtn" class="scroll-top-btn" title="Наверх">
+    <i class="fas fa-arrow-up"></i>
+</button>
+<script>
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            scrollTopBtn.style.opacity = '1';
+            scrollTopBtn.style.pointerEvents = 'auto';
+        } else {
+            scrollTopBtn.style.opacity = '0';
+            scrollTopBtn.style.pointerEvents = 'none';
+        }
+    });
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+
 
 <body>
     <!-- Шапка сайта -->
