@@ -9,9 +9,50 @@
     <title>Управление экскурсиями и гидами</title>
     <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
     <link rel="stylesheet" href="{{ asset('css/info.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/regist.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modul.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/excursion-detail.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="{{ asset('js/auth.js') }}" defer></script>
 </head>
 <body>
+
+    <header class="header">
+        <div class="logo">
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('img/logo.svg') }}" alt="Твой Тур">
+            </a>
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="{{ url('/') }}">Главная</a></li>
+                <li><a href="{{ route('excursions') }}">Экскурсии</a></li>
+                <li><a href="{{ route('pereval') }}">История</a></li>
+                <li><a href="{{ route('about') }}">О нас</a></li>
+                @auth
+                    @if(Auth::user()->role === 'admin')
+                        <li><a href="{{ route('admin.dashboard') }}">Администрирование</a></li>
+                    @endif
+                @endauth
+            </ul>
+        </nav>
+        <div class="login">
+            @guest
+                <a href="javascript:void(0);" onclick="openPopup('login-popup')">Войти</a>
+            @else
+                <a href="{{ route('profile', ['id' => Auth::id()]) }}" class="user">{{ Auth::user()->name }}</a>
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Выйти
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            @endguest
+        </div>
+    </header>
+
+
+
     <div class="container mt-4">
         <h1>Панель администратора</h1>
 
@@ -296,41 +337,36 @@
                 
                 <!-- Форма поиска и фильтрации -->
                 <div class="card mb-4">
-                    <div class="card-body">
-                        <form action="{{ route('admin.dashboard') }}" method="GET" class="row g-3">
-                            <input type="hidden" name="tab" value="list-excursions">
-                            
-                            <div class="col-md-4">
-                                <label for="search" class="form-label">Поиск по названию</label>
-                                <input type="text" class="form-control" id="search" name="search" value="{{ request('search') }}" placeholder="Введите название экскурсии">
-                            </div>
-                            
-                            <div class="col-md-3">
-                                <label for="min_price" class="form-label">Цена от</label>
-                                <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" min="0" step="100">
-                            </div>
-                            
-                            <div class="col-md-3">
-                                <label for="max_price" class="form-label">Цена до</label>
-                                <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" min="0" step="100">
-                            </div>
-                            
-                            <div class="col-md-2">
-                                <label for="sort" class="form-label">Сортировка</label>
-                                <select class="form-select" id="sort" name="sort">
-                                    <option value="">По умолчанию</option>
-                                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>По возрастанию цены</option>
-                                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>По убыванию цены</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-12 mt-3">
-                                <button type="submit" class="btn btn-primary">Применить фильтры</button>
-                                <a href="{{ route('admin.dashboard') }}#list-excursions" class="btn btn-secondary">Сбросить</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <div class="card-body">
+        <form action="{{ route('admin.dashboard') }}" method="GET" class="row g-3 filter-form">
+            <input type="hidden" name="tab" value="list-excursions">
+            <div class="col-md-4">
+                <label for="search" class="form-label">Поиск по названию</label>
+                <input type="text" class="form-control" id="search" name="search" value="{{ request('search') }}" placeholder="Введите название экскурсии">
+            </div>
+            <div class="col-md-3">
+                <label for="min_price" class="form-label">Цена от</label>
+                <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" min="0" step="100">
+            </div>
+            <div class="col-md-3">
+                <label for="max_price" class="form-label">Цена до</label>
+                <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" min="0" step="100">
+            </div>
+            <div class="col-md-2">
+                <label for="sort" class="form-label">Сортировка</label>
+                <select class="form-select" id="sort" name="sort">
+                    <option value="">По умолчанию</option>
+                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>По возрастанию цены</option>
+                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>По убыванию цены</option>
+                </select>
+            </div>
+            <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary">Применить фильтры</button>
+                <a href="{{ route('admin.dashboard') }}#list-excursions" class="btn btn-secondary">Сбросить</a>
+            </div>
+        </form>
+    </div>
+</div>
                 
                 @if($excursions->isEmpty())
                     <p>Экскурсий пока нет.</p>
@@ -362,7 +398,7 @@
                                 </td>
                                 <td>{{ number_format($excursionItem->price, 2) }} ₽</td>
                                 <td class="actions">
-                                    <a href="{{ route('admin.dashboard', ['excursion_id' => $excursionItem->id]) }}" class="btn btn-sm btn-warning">Редактировать</a>
+                                    <a href="{{ route('admin.excursions.edit', $excursionItem->id) }}" class="btn btn-sm btn-warning">Редактировать</a>
                                     <form class="delete-form" action="{{ route('admin.excursions.destroy', $excursionItem->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -702,5 +738,7 @@
             }
         });
     </script>
+
+
 </body>
 </html>

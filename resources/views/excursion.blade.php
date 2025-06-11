@@ -163,11 +163,11 @@
             </a>
             @endforeach
 
+
+        </main>
         @if($excursions->hasMorePages())
         <button id="load-more" class="btn-load-more" data-page="2">Показать больше</button>
         @endif
-        </main>
-
 
 
         <script>

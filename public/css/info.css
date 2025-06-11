@@ -185,3 +185,73 @@ button{
     text-decoration: none;
     border-radius: 4px;
 }
+
+
+/* Подключение шрифтов */
+
+/* Сброс стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Общие стили */
+body {
+    font-family: 'InterLight', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Шапка */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;flex-wrap: wrap;
+    padding: 40px 140px;
+    width: 100%;
+    background-color: #545454;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    gap: 50px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: white;
+    font-size: 22px;
+    font-family: 'InterLight';
+    transition: color 0.3s;
+}
+
+.nav a:hover {
+    color: #F8B13C;
+}
+
+.login a {
+    font-size: 22px;
+    color: white;
+    text-decoration: none;
+    font-family: 'InterLight';
+    transition: color 0.3s;
+}
+
+.login a:hover {
+    color: #F8B13C;
+}
+
+.user {
+    padding: 5px;
+    font-family: 'InterMedium';
+    font-size: 22px;
+    color: white;
+    margin-right: 15px;
+}

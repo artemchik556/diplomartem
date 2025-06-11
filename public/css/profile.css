@@ -1,10 +1,13 @@
-/* Основной контейнер профиля */
+@font-face {
+    font-family: '2'; 
+    src: url(../fonts/Inter-Light.otf);
+}
 
-.container {
+/* Основной контейнер профиля */
+.profile-container {
     max-width: 1200px;
-    margin: 120px auto 40px;
+    margin: 170px auto 40px;
     padding: 0 20px;
-    margin-top: 225px;
 }
 
 /* Карточка профиля */
@@ -34,19 +37,27 @@
 }
 
 /* Информация о пользователе */
-.profile-info {
+.profile-header {
     background-color: #fff;
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-.profile-info h3 {
+.profile-avatar {
+    font-size: 50px;
+    color: #F8B13C;
+}
+
+.profile-info h1 {
     font-family: 'InterSemiBold', sans-serif;
     font-size: 24px;
     color: #F8B13C;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .profile-info p {
@@ -56,18 +67,13 @@
     font-family: '2';
 }
 
-p{
-    font-family: '2';
-}
-
-.profile-info strong {
-    font-family: 'InterMedium', sans-serif;
-    color: #333;
+.profile-info p i {
+    margin-right: 10px;
+    color: #F8B13C;
 }
 
 /* Секции с бронированиями и отзывами */
-.bookings-section,
-.reviews-section {
+.profile-section {
     background-color: #fff;
     border-radius: 15px;
     padding: 30px;
@@ -75,8 +81,7 @@ p{
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.bookings-section h3,
-.reviews-section h3 {
+.profile-section h2 {
     font-family: 'InterSemiBold', sans-serif;
     font-size: 24px;
     color: #F8B13C;
@@ -86,7 +91,7 @@ p{
     gap: 10px;
 }
 
-/* Таблица бронирований и отзывов */
+/* Таблица бронирований */
 .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -94,15 +99,15 @@ p{
     padding: 0 15px;
 }
 
-.table {
+.bookings-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
     min-width: 600px;
 }
 
-.table th,
-.table td {
+.bookings-table th,
+.bookings-table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #eee;
@@ -110,7 +115,7 @@ p{
     font-family: '2';
 }
 
-.table th {
+.bookings-table th {
     font-family: 'InterMedium', sans-serif;
     color: #333;
     background-color: #f8f9fa;
@@ -119,12 +124,12 @@ p{
     z-index: 1;
 }
 
-.table tr:hover {
+.bookings-table tr:hover {
     background-color: #f8f9fa;
 }
 
-/* Badge styles */
-.badge {
+/* Статусы бронирований */
+.booking-status {
     padding: 5px 10px;
     border-radius: 20px;
     font-size: 14px;
@@ -134,38 +139,75 @@ p{
     text-align: center;
 }
 
-.bg-warning {
-    background-color: #fff3cd !important;
-    color: #856404 !important;
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
 }
 
-.bg-success {
-    background-color: #d4edda !important;
-    color: #155724 !important;
+.status-approved {
+    background-color: #d4edda;
+    color: #155724;
 }
 
-.bg-danger {
-    background-color: #f8d7da !important;
-    color: #721c24 !important;
+.status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
 }
 
-.bg-info {
-    background-color: #d1ecf1 !important;
-    color: #0c5460 !important;
+.status-completed {
+    background-color: #d1ecf1;
+    color: #0c5460;
 }
 
-/* Rating stars */
-.rating {
+/* Отзывы */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.review-card {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
     display: flex;
-    gap: 5px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-.rating .fas {
+.review-excursion {
+    font-family: 'InterMedium', sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
+.review-rating .fas {
     color: #e4e5e9;
 }
 
-.rating .fas.active {
+.review-rating .fas.active {
     color: #F8B13C;
+}
+
+.review-content {
+    font-family: '2';
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.review-date {
+    font-family: '2';
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 /* Empty state */
@@ -173,61 +215,5 @@ p{
     text-align: center;
     padding: 40px 20px;
     color: #666;
-}
-
-/* Responsive styles */
-@media (max-width: 992px) {
-    .container {
-        padding: 0 15px;
-    }
-
-    .card,
-    .profile-info,
-    .bookings-section,
-    .reviews-section {
-        padding: 20px;
-    }
-
-    .card-header h2 {
-        font-size: 28px;
-    }
-
-    .profile-info h3,
-    .bookings-section h3,
-    .reviews-section h3 {
-        font-size: 22px;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        margin-top: 100px;
-    }
-
-    .table th,
-    .table td {
-        padding: 12px;
-        font-size: 14px;
-    }
-
-    .badge {
-        min-width: 90px;
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 576px) {
-    .card-header h2 {
-        font-size: 24px;
-    }
-
-    .profile-info h3,
-    .bookings-section h3,
-    .reviews-section h3 {
-        font-size: 20px;
-    }
-
-    .profile-info p {
-        font-size: 14px;
-    }
+    font-family: '2';
 }

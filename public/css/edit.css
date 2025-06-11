@@ -52,6 +52,7 @@ form {
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
+    padding: 5px;
  /* Ограничение ширины формы для читабельности */
 }
 
@@ -311,4 +312,35 @@ input:focus, textarea:focus, select:focus {
 .badge {
     font-size: 12px;
     padding: 5px 10px;
+}
+
+#list-excursions .card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+#list-excursions .card-body {
+    width: 100% !important;
+    padding: 1.25rem !important;
+}
+
+#list-excursions .row {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+#list-excursions .form-control,
+#list-excursions .form-select {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+#list-excursions .col-md-4,
+#list-excursions .col-md-3,
+#list-excursions .col-md-2,
+#list-excursions .col-12 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
 }

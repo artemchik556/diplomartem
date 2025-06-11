@@ -186,7 +186,7 @@
 
             <button type="submit" class="btn btn-primary">Сохранить изменения</button>
             <a href="{{ route('admin.excursions.index') }}" class="btn btn-secondary">Отмена</a>
-            <a href="{{ route('admin.dashboard') }}" class="btn btn-info">Назад к панели</a>
+            <a href="{{ route('admin.dashboard') }}#list-excursions" class="btn btn-info">Вернуться назад</a>
         </form>
 
         <!-- Форма удаления экскурсии -->

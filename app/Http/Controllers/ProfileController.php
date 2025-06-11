@@ -2,19 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        $user = User::with(['bookings' => function($query) {
-            $query->orderBy('booking_date', 'desc');
-        }, 'bookings.excursion', 'reviews.excursion'])
-        ->findOrFail(Auth::id());
-        
-        return view('profile', compact('user'));
+        $user = User::findOrFail(auth()->id());
+        $bookings = $user->bookings()->with('excursion');
+
+        // Фильтр по статусу
+        if ($request->filled('status')) {
+            if ($request->status === 'completed') {
+                $bookings->where('status', 'approved')
+                        ->where('booking_date', '<', Carbon::now());
+            } else {
+                $bookings->where('status', $request->status);
+            }
+        }
+
+        // Сортировка по дате
+        if ($request->filled('sort_date')) {
+            $bookings->orderBy('booking_date', $request->sort_date);
+        }
+
+        // Сортировка по названию экскурсии
+        if ($request->filled('sort_title')) {
+            $bookings->join('excursions', 'bookings.excursion_id', '=', 'excursions.id')
+                    ->orderBy('excursions.title', $request->sort_title)
+                    ->select('bookings.*');
+        }
+
+        $bookings = $bookings->get();
+
+        if ($request->ajax()) {
+            return response()->json(['bookings' => $bookings]);
+        }
+
+        return view('profile.show', compact('user', 'bookings'));
     }
 }
