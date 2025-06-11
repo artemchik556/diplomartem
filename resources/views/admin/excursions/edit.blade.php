@@ -22,7 +22,7 @@
             <a href="{{ route('admin.guides.create') }}" class="btn btn-primary mt-2">Добавить гида</a>
         </div>
     @else
-        <form action="{{ route('admin.excursions.update', $excursion->id) }}" method="POST" enctype="multipart/form-data">
+        <form class="edits" action="{{ route('admin.excursions.update', $excursion->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 

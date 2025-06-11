@@ -24,6 +24,8 @@ body {
     padding: 20px;
 }
 
+
+
 /* Заголовки */
 h1 {
     font-family: 'FranklinGothic', sans-serif;
@@ -41,10 +43,9 @@ h3 {
 }
 
 
-.pad{
-    padding: 15px;
+.edits{
+    padding: 20px;
 }
-
 
 /* Стили для форм */
 form {
@@ -52,7 +53,6 @@ form {
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
-    padding: 5px;
  /* Ограничение ширины формы для читабельности */
 }
 

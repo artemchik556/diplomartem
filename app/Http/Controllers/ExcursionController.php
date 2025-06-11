@@ -325,74 +325,61 @@ class ExcursionController extends Controller
         }
     }
 
-    public function adminPanel(Request $request)
-    {
-        try {
-            // Получаем всех гидов
-            $guides = Guide::all();
+public function adminPanel(Request $request)
+{
+    try {
+        $guides = Guide::all();
+        $query = Excursion::query()->with(['guide']);
 
-            // Получаем все экскурсии с фильтрацией (как в index)
-            $query = Excursion::query()->with(['guide']);
-
-            if ($request->has('search') && !empty($request->search)) {
-                $query->where('title', 'like', '%' . $request->search . '%');
-            }
-            if ($request->has('min_price') && is_numeric($request->min_price)) {
-                $query->where('price', '>=', $request->min_price);
-            }
-            if ($request->has('max_price') && is_numeric($request->max_price)) {
-                $query->where('price', '<=', $request->max_price);
-            }
-            if ($request->has('location') && !empty($request->location)) {
-                $query->where('location', $request->location);
-            }
-            if ($request->has('sort')) {
-                $sortOrder = $request->sort === 'asc' ? 'asc' : 'desc';
-                $query->orderBy('price', $sortOrder);
-            } else {
-                $query->latest();
-            }
-
-            $excursions = $query->get();
-
-            // Получаем отзывы для модерации с проверкой связей
-            $reviews = Review::with(['user', 'excursion'])
-                ->whereHas('user')
-                ->whereHas('excursion')
-                ->latest()
-                ->get();
-
-            // Получаем все бронирования с проверкой связей
-            $bookings = Booking::with(['user', 'excursion'])
-                ->whereHas('user')
-                ->whereHas('excursion')
-                ->latest('booking_date')
-                ->get();
-
-            // Получаем выбранную экскурсию для редактирования
-            $excursion = null;
-            if ($request->has('excursion_id')) {
-                $excursion = Excursion::find($request->excursion_id);
-            }
-
-            // Получаем выбранного гида
-            $guide = null;
-            if ($request->has('guide_id')) {
-                $guide = Guide::find($request->guide_id);
-            }
-
-            return view('admin.panel', compact('guides', 'excursions', 'excursion', 'guide', 'reviews', 'bookings'));
-        } catch (\Exception $e) {
-            \Log::error('Ошибка в админ панели:', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return redirect()
-                ->route('admin.dashboard')
-                ->with('error', 'Произошла ошибка при загрузке админ панели. Пожалуйста, попробуйте позже.');
+        // Фильтрация
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('title', 'like', '%' . $request->search . '%');
         }
+        if ($request->has('min_price') && is_numeric($request->min_price)) {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->has('max_price') && is_numeric($request->max_price)) {
+            $query->where('price', '<=', $request->max_price);
+        }
+        if ($request->has('location') && !empty($request->location)) {
+            $query->where('location', $request->location);
+        }
+        if ($request->has('sort')) {
+            $sortOrder = $request->sort === 'asc' ? 'asc' : 'desc';
+            $query->orderBy('price', $sortOrder);
+        } else {
+            $query->latest();
+        }
+
+        $excursions = $query->get();
+        $reviews = Review::with(['user', 'excursion'])
+            ->whereHas('user')
+            ->whereHas('excursion')
+            ->latest()
+            ->get();
+        $bookings = Booking::with(['user', 'excursion'])
+            ->whereHas('user')
+            ->whereHas('excursion')
+            ->latest('booking_date')
+            ->get();
+        $excursion = $request->has('excursion_id') ? Excursion::find($request->excursion_id) : null;
+        $guide = $request->has('guide_id') ? Guide::find($request->guide_id) : null;
+
+        // Получаем параметр tab из запроса
+        $tab = $request->input('tab', 'list-excursions'); // По умолчанию list-excursions
+
+        return view('admin.panel', compact('guides', 'excursions', 'excursion', 'guide', 'reviews', 'bookings', 'tab'));
+    } catch (\Exception $e) {
+        \Log::error('Ошибка в админ панели:', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('error', 'Произошла ошибка при загрузке админ панели. Пожалуйста, попробуйте позже.');
     }
+}
 
     public function storeRating(Request $request, Excursion $excursion)
     {

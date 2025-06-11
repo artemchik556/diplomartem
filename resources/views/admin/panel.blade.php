@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale="1.0">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -16,7 +16,6 @@
     <script src="{{ asset('js/auth.js') }}" defer></script>
 </head>
 <body>
-
     <header class="header">
         <div class="logo">
             <a href="{{ url('/') }}">
@@ -51,8 +50,6 @@
         </div>
     </header>
 
-
-
     <div class="container mt-4">
         <h1>Панель администратора</h1>
 
@@ -71,30 +68,30 @@
 
         <ul class="nav nav-tabs" id="adminTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="add-excursion-tab" data-bs-toggle="tab" data-bs-target="#add-excursion" type="button" role="tab">Добавить экскурсию</button>
+                <button class="nav-link {{ $tab == 'add-excursion' ? 'active' : '' }}" id="add-excursion-tab" data-bs-toggle="tab" data-bs-target="#add-excursion" type="button" role="tab">Добавить экскурсию</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="edit-excursion-tab" data-bs-toggle="tab" data-bs-target="#edit-excursion" type="button" role="tab">Редактировать экскурсию</button>
+                <button class="nav-link {{ $tab == 'edit-excursion' ? 'active' : '' }}" id="edit-excursion-tab" data-bs-toggle="tab" data-bs-target="#edit-excursion" type="button" role="tab">Редактировать экскурсию</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="list-excursions-tab" data-bs-toggle="tab" data-bs-target="#list-excursions" type="button" role="tab">Список экскурсий</button>
+                <button class="nav-link {{ $tab == 'list-excursions' ? 'active' : '' }}" id="list-excursions-tab" data-bs-toggle="tab" data-bs-target="#list-excursions" type="button" role="tab">Список экскурсий</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="list-guides-tab" data-bs-toggle="tab" data-bs-target="#list-guides" type="button" role="tab">Список гидов</button>
+                <button class="nav-link {{ $tab == 'list-guides' ? 'active' : '' }}" id="list-guides-tab" data-bs-toggle="tab" data-bs-target="#list-guides" type="button" role="tab">Список гидов</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="reviews-bookings-tab" data-bs-toggle="tab" data-bs-target="#reviews-bookings" type="button" role="tab">Отзывы и бронирования</button>
+                <button class="nav-link {{ $tab == 'reviews-bookings' ? 'active' : '' }}" id="reviews-bookings-tab" data-bs-toggle="tab" data-bs-target="#reviews-bookings" type="button" role="tab">Отзывы и бронирования</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="consultations-tab" data-bs-toggle="tab" data-bs-target="#consultations" type="button" role="tab">Консультации</button>
+                <button class="nav-link {{ $tab == 'consultations' ? 'active' : '' }}" id="consultations-tab" data-bs-toggle="tab" data-bs-target="#consultations" type="button" role="tab">Консультации</button>
             </li>
         </ul>
 
         <div class="tab-content" id="adminTabContent">
             <!-- Добавление экскурсии -->
-            <div class="tab-pane fade show active" id="add-excursion" role="tabpanel">
+            <div class="tab-pane fade {{ $tab == 'add-excursion' ? 'show active' : '' }}" id="add-excursion" role="tabpanel">
                 <h2>Добавление новой экскурсии</h2>
-                <form id="add-excursion-form" class="pad" action="{{ route('admin.excursions.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="add-excursion-form" class="pad edits" action="{{ route('admin.excursions.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="title">Название*</label>
@@ -194,7 +191,7 @@
             </div>
 
             <!-- Редактирование экскурсии -->
-            <div class="tab-pane fade" id="edit-excursion" role="tabpanel">
+            <div class="tab-pane fade {{ $tab == 'edit-excursion' ? 'show active' : '' }}" id="edit-excursion" role="tabpanel">
                 <h2>Редактирование экскурсии</h2>
                 @if($excursion)
                 <form class="pad" id="edit-excursion-form" method="POST" action="{{ route('admin.excursions.update', $excursion->id) }}" enctype="multipart/form-data">
@@ -268,7 +265,6 @@
                                value="{{ old('location', $excursion->location) }}" required>
                         @error('location') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                    <!-- Отображение текущих фотографий -->
                     @if($excursion->photos->isNotEmpty())
                         <div class="form-group">
                             <label>Текущие фотографии:</label>
@@ -288,7 +284,6 @@
                             </div>
                         </div>
                     @endif
-                    <!-- Поле для загрузки новых фотографий -->
                     <div class="form-group">
                         <label for="photos">Добавить новые фотографии</label>
                         <input type="file" class="form-control" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/jpg,image/gif">
@@ -329,45 +324,42 @@
             </div>
 
             <!-- Список экскурсий -->
-            <div class="tab-pane fade" id="list-excursions" role="tabpanel">
+            <div class="tab-pane fade {{ $tab == 'list-excursions' ? 'show active' : '' }}" id="list-excursions" role="tabpanel">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3>Список экскурсий</h3>
                     <a href="{{ route('admin.excursions.create') }}" class="btn btn-primary">Добавить экскурсию</a>
                 </div>
-                
-                <!-- Форма поиска и фильтрации -->
                 <div class="card mb-4">
-    <div class="card-body">
-        <form action="{{ route('admin.dashboard') }}" method="GET" class="row g-3 filter-form">
-            <input type="hidden" name="tab" value="list-excursions">
-            <div class="col-md-4">
-                <label for="search" class="form-label">Поиск по названию</label>
-                <input type="text" class="form-control" id="search" name="search" value="{{ request('search') }}" placeholder="Введите название экскурсии">
-            </div>
-            <div class="col-md-3">
-                <label for="min_price" class="form-label">Цена от</label>
-                <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" min="0" step="100">
-            </div>
-            <div class="col-md-3">
-                <label for="max_price" class="form-label">Цена до</label>
-                <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" min="0" step="100">
-            </div>
-            <div class="col-md-2">
-                <label for="sort" class="form-label">Сортировка</label>
-                <select class="form-select" id="sort" name="sort">
-                    <option value="">По умолчанию</option>
-                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>По возрастанию цены</option>
-                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>По убыванию цены</option>
-                </select>
-            </div>
-            <div class="col-12 mt-3">
-                <button type="submit" class="btn btn-primary">Применить фильтры</button>
-                <a href="{{ route('admin.dashboard') }}#list-excursions" class="btn btn-secondary">Сбросить</a>
-            </div>
-        </form>
-    </div>
-</div>
-                
+                    <div class="card-body">
+                        <form action="{{ route('admin.dashboard') }}" method="GET" class="row g-3 filter-form">
+                            <input type="hidden" name="tab" value="list-excursions">
+                            <div class="col-md-4">
+                                <label for="search" class="form-label">Поиск по названию</label>
+                                <input type="text" class="form-control" id="search" name="search" value="{{ request('search') }}" placeholder="Введите название экскурсии">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="min_price" class="form-label">Цена от</label>
+                                <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" min="0" step="100">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="max_price" class="form-label">Цена до</label>
+                                <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" min="0" step="100">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="sort" class="form-label">Сортировка</label>
+                                <select class="form-select" id="sort" name="sort">
+                                    <option value="">По умолчанию</option>
+                                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>По возрастанию цены</option>
+                                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>По убыванию цены</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <button type="submit" class="btn btn-primary">Применить фильтры</button>
+                                <button type="button" class="btn btn-secondary reset-filters">Сбросить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 @if($excursions->isEmpty())
                     <p>Экскурсий пока нет.</p>
                 @else
@@ -413,7 +405,7 @@
             </div>
 
             <!-- Список гидов -->
-            <div class="tab-pane fade" id="list-guides" role="tabpanel">
+            <div class="tab-pane fade {{ $tab == 'list-guides' ? 'show active' : '' }}" id="list-guides" role="tabpanel">
                 <h2>Список гидов</h2>
                 <a href="{{ route('admin.guides.create') }}" class="btn btn-primary">Добавить гида</a>
                 @if(!isset($guides) || $guides->isEmpty())
@@ -458,7 +450,7 @@
             </div>
 
             <!-- Отзывы и бронирования -->
-            <div class="tab-pane fade" id="reviews-bookings" role="tabpanel">
+            <div class="tab-pane fade {{ $tab == 'reviews-bookings' ? 'show active' : '' }}" id="reviews-bookings" role="tabpanel">
                 <ul class="nav nav-tabs" id="reviewsBookingsTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">Отзывы</button>
@@ -529,8 +521,6 @@
                                                 </form>
                                             </td>
                                         </tr>
-
-                                        <!-- Modal for full review -->
                                         <div class="modal fade" id="reviewModal{{ $review->id }}" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -610,8 +600,6 @@
                                                 </button>
                                             </td>
                                         </tr>
-
-                                        <!-- Modal for booking details -->
                                         <div class="modal fade" id="bookingModal{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -657,7 +645,7 @@
             </div>
 
             <!-- Консультации -->
-            <div class="tab-pane fade" id="consultations" role="tabpanel">
+            <div class="tab-pane fade {{ $tab == 'consultations' ? 'show active' : '' }}" id="consultations" role="tabpanel">
                 <h2>Заявки на консультацию</h2>
                 <div id="consultations-content">
                     <iframe src="{{ route('admin.consultations.index') }}" frameborder="0" style="width: 100%; height: 800px;"></iframe>
@@ -726,7 +714,53 @@
             });
         });
 
-        // Активация вкладки после загрузки страницы
+        // AJAX для формы фильтрации
+        $('.filter-form').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'GET',
+                data: $(this).serialize(),
+                success: function(response) {
+                    $('#list-excursions').html($(response).find('#list-excursions').html());
+                    window.location.hash = 'list-excursions';
+                    const tab = document.querySelector('.nav-link[data-bs-target="#list-excursions"]');
+                    if (tab) {
+                        const tabInstance = new bootstrap.Tab(tab);
+                        tabInstance.show();
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Ошибка при применении фильтров:', xhr.responseText);
+                    alert('Ошибка при применении фильтров: ' + xhr.responseText);
+                }
+            });
+        });
+
+        // Обработчик для кнопки "Сбросить"
+        $('.reset-filters').on('click', function() {
+            $('.filter-form')[0].reset();
+            $.ajax({
+                url: '{{ route('admin.dashboard') }}',
+                method: 'GET',
+                data: { tab: 'list-excursions' },
+                success: function(response) {
+                    $('#list-excursions').html($(response).find('#list-excursions').html());
+                    history.pushState(null, null, '{{ route('admin.dashboard') }}#list-excursions');
+                    const tab = document.querySelector('.nav-link[data-bs-target="#list-excursions"]');
+                    if (tab) {
+                        const tabInstance = new bootstrap.Tab(tab);
+                        tabInstance.show();
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Ошибка при сбросе фильтров:', xhr.responseText);
+                    alert('Ошибка при сбросе фильтров: ' + xhr.responseText);
+                }
+            });
+        });
+
+        // Активация вкладки при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             const hash = window.location.hash;
             if (hash) {
@@ -738,7 +772,5 @@
             }
         });
     </script>
-
-
 </body>
 </html>

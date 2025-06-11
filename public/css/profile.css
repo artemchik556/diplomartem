@@ -1,6 +1,6 @@
 @font-face {
-    font-family: '2'; 
-    src: url(../fonts/Inter-Light.otf);
+    font-family: '2';
+    src: url('../fonts/Inter-Light.otf');
 }
 
 /* Основной контейнер профиля */
@@ -162,7 +162,6 @@
 /* Отзывы */
 .reviews-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
@@ -216,4 +215,95 @@
     padding: 40px 20px;
     color: #666;
     font-family: '2';
+}
+
+/* Стили для формы фильтрации */
+.filter-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-family: '2';
+}
+
+.filter-form .form-label {
+    font-family: 'InterMedium', sans-serif;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.filter-form .form-select {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+}
+
+.filter-form .form-select:focus {
+    border-color: #F8B13C;
+    box-shadow: 0 0 5px rgba(248, 177, 60, 0.3);
+    outline: none;
+}
+
+.filter-form .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-family: 'InterMedium', sans-serif;
+}
+
+.filter-form .btn-primary.filter-btn {
+    background-color: #F8B13C;
+    border: none;
+    color: #fff;
+}
+
+.filter-form .btn-primary.filter-btn:hover {
+    background-color: #e0a034;
+    transform: translateY(-1px);
+}
+
+.filter-form .btn-secondary.reset-filters {
+    background-color: #6c757d;
+    border: none;
+    color: #fff;
+}
+
+.filter-form .btn-secondary.reset-filters:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+.filter-form .row.g-3 {
+    margin-bottom: 10px;
+}
+
+.filter-form .col-4 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    .filter-form .col-4 {
+        flex: 1;
+        min-width: 120px; /* Минимальная ширина для предотвращения сжатия */
+    }
+
+    .filter-form .row.g-3 {
+        flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
+        overflow-x: auto; /* Горизонтальная прокрутка, если не помещается */
+    }
+
+    .filter-form .btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
 }
