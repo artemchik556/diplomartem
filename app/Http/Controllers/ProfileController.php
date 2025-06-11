@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -16,8 +17,7 @@ class ProfileController extends Controller
         // Фильтр по статусу
         if ($request->filled('status')) {
             if ($request->status === 'completed') {
-                $bookings->where('status', 'approved')
-                        ->where('booking_date', '<', Carbon::now());
+                $bookings->where('status', 'completed');
             } else {
                 $bookings->where('status', $request->status);
             }
@@ -36,6 +36,16 @@ class ProfileController extends Controller
         }
 
         $bookings = $bookings->get();
+
+        // Логирование для отладки
+        Log::info('Profile bookings filtered', [
+            'user_id' => $user->id,
+            'status' => $request->status,
+            'sort_date' => $request->sort_date,
+            'sort_title' => $request->sort_title,
+            'bookings_count' => $bookings->count(),
+            'bookings' => $bookings->toArray(),
+        ]);
 
         if ($request->ajax()) {
             return response()->json(['bookings' => $bookings]);
