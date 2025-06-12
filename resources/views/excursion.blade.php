@@ -129,9 +129,9 @@
                 <option value="">Все направления</option>
                 <option value="Челябинская область" {{ request('location') == 'Челябинская область' ? 'selected' : '' }}>Челябинская область</option>
                 <option value="Ханты-Мансийский АО" {{ request('location') == 'Ханты-Мансийский АО' ? 'selected' : '' }}>Ханты-Мансийский АО</option>
-                <option value="Башкирия" {{ request('location') == 'Башкирия' ? 'selected' : '' }}>Республика Башкортастан</option>
+                <option value="Респ. Башкортастан" {{ request('location') == 'Респ. Башкортастан' ? 'selected' : '' }}>Респ. Башкортастан</option>
                 <option value="Свердловская область" {{ request('location') == 'Свердловская область' ? 'selected' : '' }}>Свердловская область</option>
-                <option value="Пермь" {{ request('location') == 'Пермь' ? 'selected' : '' }}>Пермьская область</option>
+                <option value="Пермьская область" {{ request('location') == 'Пермьская область' ? 'selected' : '' }}>Пермьская область</option>
             </select>
         </div>
 
