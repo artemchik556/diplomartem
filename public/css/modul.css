@@ -54,7 +54,7 @@
 .modal-content p{
     font-size: 15px;
     font-family: '2';
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 /* Поля ввода */
@@ -98,6 +98,8 @@ ul{
     font-family: '2'
 }
 ul li{
-    padding: 2px;
+    padding: 5px;
+    font-size: 22px;
+    font-family: 'InterLight';   
 }
 

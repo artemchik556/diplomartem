@@ -96,7 +96,6 @@
                 </div>
             @endif
 
-    <!-- Поле для загрузки новых фотографий -->
             <div class="mb-3">
                 <label for="photos" class="form-label">Добавить новые фотографии</label>
                 <input type="file" class="form-control" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/jpg,image/gif">
@@ -107,18 +106,52 @@
             </div>
 
             <div class="mb-3">
-                <label for="guide_id" class="form-label">Гид</label>
-                <select class="form-control" id="guide_id" name="guide_id" required>
+                <label for="guide_a_id" class="form-label">Гид для группы A</label>
+                <select class="form-control" id="guide_a_id" name="guide_a_id" required>
                     <option value="">Выберите гида</option>
                     @forelse($guides as $guide)
-                        <option value="{{ $guide->id }}" {{ old('guide_id', $excursion->guide_id) == $guide->id ? 'selected' : '' }}>
+                        <option value="{{ $guide->id }}" {{ old('guide_a_id', $excursion->guide_a_id) == $guide->id ? 'selected' : '' }}>
                             {{ $guide->name }} ({{ $guide->position }})
                         </option>
                     @empty
                         <option value="" disabled>Гидов пока нет</option>
                     @endforelse
                 </select>
-                @error('guide_id')
+                @error('guide_a_id')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="guide_b_id" class="form-label">Гид для группы B</label>
+                <select class="form-control" id="guide_b_id" name="guide_b_id" required>
+                    <option value="">Выберите гида</option>
+                    @forelse($guides as $guide)
+                        <option value="{{ $guide->id }}" {{ old('guide_b_id', $excursion->guide_b_id) == $guide->id ? 'selected' : '' }}>
+                            {{ $guide->name }} ({{ $guide->position }})
+                        </option>
+                    @empty
+                        <option value="" disabled>Гидов пока нет</option>
+                    @endforelse
+                </select>
+                @error('guide_b_id')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="guide_c_id" class="form-label">Гид для группы C</label>
+                <select class="form-control" id="guide_c_id" name="guide_c_id" required>
+                    <option value="">Выберите гида</option>
+                    @forelse($guides as $guide)
+                        <option value="{{ $guide->id }}" {{ old('guide_c_id', $excursion->guide_c_id) == $guide->id ? 'selected' : '' }}>
+                            {{ $guide->name }} ({{ $guide->position }})
+                        </option>
+                    @empty
+                        <option value="" disabled>Гидов пока нет</option>
+                    @endforelse
+                </select>
+                @error('guide_c_id')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -189,7 +222,6 @@
             <a href="{{ route('admin.dashboard') }}#list-excursions" class="btn btn-info">Вернуться назад</a>
         </form>
 
-        <!-- Форма удаления экскурсии -->
         <form action="{{ route('admin.excursions.destroy', $excursion->id) }}" method="POST" class="mt-3" 
               onsubmit="return confirm('Вы уверены, что хотите удалить эту экскурсию? Это действие нельзя отменить.');">
             @csrf

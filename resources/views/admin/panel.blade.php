@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale="1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -80,10 +80,10 @@
                 <button class="nav-link {{ $tab == 'list-guides' ? 'active' : '' }}" id="list-guides-tab" data-bs-toggle="tab" data-bs-target="#list-guides" type="button" role="tab">Список гидов</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link {{ $tab == 'reviews-bookings' ? 'active' : '' }}" id="reviews-bookings-tab" data-bs-toggle="tab" data-bs-target="#reviews-bookings" type="button" role="tab">Отзывы и бронирования</button>
+                <button class="nav-link {{ $tab == 'consultations' ? 'active' : '' }}" id="consultations-tab" data-bs-toggle="tab" data-bs-target="#consultations" type="button" role="tab">Консультации</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link {{ $tab == 'consultations' ? 'active' : '' }}" id="consultations-tab" data-bs-toggle="tab" data-bs-target="#consultations" type="button" role="tab">Консультации</button>
+                <button class="nav-link {{ $tab == 'reviews-bookings' ? 'active' : '' }}" id="reviews-bookings-tab" data-bs-toggle="tab" data-bs-target="#reviews-bookings" type="button" role="tab">Отзывы и бронирования</button>
             </li>
         </ul>
 
@@ -103,20 +103,51 @@
                         <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description') }}</textarea>
                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
+                    <h3>Гиды для групп*</h3>
                     <div class="form-group">
-                        <label for="guide_id">Гид*</label>
-                        <select class="form-control" id="guide_id" name="guide_id" required>
+                        <label for="guide_a_id">Гид для группы A*</label>
+                        <select class="form-control" id="guide_a_id" name="guide_a_id" required>
                             @if(!isset($guides) || $guides->isEmpty())
                                 <option value="">Гидов пока нет</option>
                             @else
                                 @foreach($guides as $guide)
-                                    <option value="{{ $guide->id }}" {{ old('guide_id') == $guide->id ? 'selected' : '' }}>
+                                    <option value="{{ $guide->id }}" {{ old('guide_a_id') == $guide->id ? 'selected' : '' }}>
                                         {{ $guide->name }} ({{ $guide->position }})
                                     </option>
                                 @endforeach
                             @endif
                         </select>
-                        @error('guide_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('guide_a_id') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="guide_b_id">Гид для группы B*</label>
+                        <select class="form-control" id="guide_b_id" name="guide_b_id" required>
+                            @if(!isset($guides) || $guides->isEmpty())
+                                <option value="">Гидов пока нет</option>
+                            @else
+                                @foreach($guides as $guide)
+                                    <option value="{{ $guide->id }}" {{ old('guide_b_id') == $guide->id ? 'selected' : '' }}>
+                                        {{ $guide->name }} ({{ $guide->position }})
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('guide_b_id') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="guide_c_id">Гид для группы C*</label>
+                        <select class="form-control" id="guide_c_id" name="guide_c_id" required>
+                            @if(!isset($guides) || $guides->isEmpty())
+                                <option value="">Гидов пока нет</option>
+                            @else
+                                @foreach($guides as $guide)
+                                    <option value="{{ $guide->id }}" {{ old('guide_c_id') == $guide->id ? 'selected' : '' }}>
+                                        {{ $guide->name }} ({{ $guide->position }})
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('guide_c_id') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label for="start_date">Дата начала*</label>
@@ -207,20 +238,51 @@
                         <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description', $excursion->description) }}</textarea>
                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
+                    <h3>Гиды для групп*</h3>
                     <div class="form-group">
-                        <label for="guide_id">Гид*</label>
-                        <select class="form-control" id="guide_id" name="guide_id" required>
+                        <label for="guide_a_id">Гид для группы A*</label>
+                        <select class="form-control" id="guide_a_id" name="guide_a_id" required>
                             @if(!isset($guides) || $guides->isEmpty())
                                 <option value="">Гидов пока нет</option>
                             @else
                                 @foreach($guides as $guide)
-                                    <option value="{{ $guide->id }}" {{ $excursion->guide_id == $guide->id ? 'selected' : '' }}>
+                                    <option value="{{ $guide->id }}" {{ old('guide_a_id', $excursion->guide_a_id) == $guide->id ? 'selected' : '' }}>
                                         {{ $guide->name }} ({{ $guide->position }})
                                     </option>
                                 @endforeach
                             @endif
                         </select>
-                        @error('guide_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('guide_a_id') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="guide_b_id">Гид для группы B*</label>
+                        <select class="form-control" id="guide_b_id" name="guide_b_id" required>
+                            @if(!isset($guides) || $guides->isEmpty())
+                                <option value="">Гидов пока нет</option>
+                            @else
+                                @foreach($guides as $guide)
+                                    <option value="{{ $guide->id }}" {{ old('guide_b_id', $excursion->guide_b_id) == $guide->id ? 'selected' : '' }}>
+                                        {{ $guide->name }} ({{ $guide->position }})
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('guide_b_id') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="guide_c_id">Гид для группы C*</label>
+                        <select class="form-control" id="guide_c_id" name="guide_c_id" required>
+                            @if(!isset($guides) || $guides->isEmpty())
+                                <option value="">Гидов пока нет</option>
+                            @else
+                                @foreach($guides as $guide)
+                                    <option value="{{ $guide->id }}" {{ old('guide_c_id', $excursion->guide_c_id) == $guide->id ? 'selected' : '' }}>
+                                        {{ $guide->name }} ({{ $guide->position }})
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('guide_c_id') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label for="start_date">Дата начала*</label>
@@ -367,7 +429,7 @@
                         <thead>
                             <tr>
                                 <th>Название</th>
-                                <th>Гид</th>
+                                <th>Гиды (A/B/C)</th>
                                 <th>Дата</th>
                                 <th>Места (A/B/C)</th>
                                 <th>Цена</th>
@@ -378,7 +440,11 @@
                             @foreach($excursions as $excursionItem)
                             <tr>
                                 <td>{{ $excursionItem->title }}</td>
-                                <td>{{ $excursionItem->guide ? $excursionItem->guide->name : 'Не указан' }}</td>
+                                <td>
+                                    A: {{ $excursionItem->guideA ? $excursionItem->guideA->name : 'Не указан' }}<br>
+                                    B: {{ $excursionItem->guideB ? $excursionItem->guideB->name : 'Не указан' }}<br>
+                                    C: {{ $excursionItem->guideC ? $excursionItem->guideC->name : 'Не указан' }}
+                                </td>
                                 <td>
                                     {{ $excursionItem->start_date->format('d.m.Y H:i') }}<br>
                                     до {{ $excursionItem->end_date->format('d.m.Y H:i') }}

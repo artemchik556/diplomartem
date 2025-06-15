@@ -189,9 +189,7 @@
 
 
         </main>
-        @if($excursions->hasMorePages())
-        <button id="load-more" class="btn-load-more" data-page="2">Показать больше</button>
-        @endif
+
 
 
         <script>
@@ -504,50 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Функция для добавления обработчика кнопки "Показать больше"
-    function addLoadMoreListener(button) {
-        button.addEventListener('click', function() {
-            const page = button.getAttribute('data-page');
-            const url = new URL(window.location.href);
-            url.searchParams.set('page', page);
 
-            button.textContent = 'Загрузка...';
-            button.disabled = true;
-
-            fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                excursionsList.insertAdjacentHTML('beforeend', data.html);
-                const newPage = parseInt(page) + 1;
-                button.setAttribute('data-page', newPage);
-
-                if (!data.hasMore) {
-                    button.remove();
-                    loadMoreBtn = null;
-                } else {
-                    button.textContent = 'Показать больше';
-                    button.disabled = false;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                button.textContent = 'Ошибка, попробуйте еще раз';
-                button.disabled = false;
-            });
-        });
-    }
-
-    // Добавляем обработчик для существующей кнопки "Показать больше"
-    if (loadMoreBtn) {
-        addLoadMoreListener(loadMoreBtn);
-    }
-});
-</script>
 </body>
 @include('auth.login')
 @include('auth.register')
