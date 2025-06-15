@@ -187,21 +187,24 @@
             </a>
             @endforeach
 
-
+                    @if($excursions->hasMorePages())
+            <div class="load-more-container" style="text-align: center; margin-top: 20px;">
+                <button id="load-more" class="btn btn-primary" data-page="2">Показать больше</button>
+            </div>
+        @endif
         </main>
-
-
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const loadMoreBtn = document.getElementById('load-more');
+                const excursionsList = document.getElementById('excursions-list');
 
                 if (loadMoreBtn) {
                     loadMoreBtn.addEventListener('click', function() {
                         const button = this;
                         const page = button.getAttribute('data-page');
 
-                        // Сохраняем все параметры URL
+                        // Сохраняем все параметры URL, включая текущие фильтры
                         const url = new URL(window.location.href);
                         url.searchParams.set('page', page);
 
@@ -218,7 +221,7 @@
                             .then(response => response.json())
                             .then(data => {
                                 // Добавляем новые экскурсии
-                                document.getElementById('excursions-list').insertAdjacentHTML('beforeend', data.html);
+                                excursionsList.insertAdjacentHTML('beforeend', data.html);
 
                                 // Обновляем номер страницы
                                 const newPage = parseInt(page) + 1;
@@ -226,16 +229,17 @@
 
                                 // Если больше нет экскурсий - скрываем кнопку
                                 if (!data.hasMore) {
-                                    button.remove();
+                                    button.remove(); // Удаляем кнопку, если больше нет страниц
                                 } else {
                                     button.textContent = 'Показать больше';
                                     button.disabled = false;
                                 }
                             })
                             .catch(error => {
-                                console.error('Error:', error);
+                                console.error('Error loading more excursions:', error);
                                 button.textContent = 'Ошибка, попробуйте еще раз';
                                 button.disabled = false;
+                                alert('Произошла ошибка при загрузке экскурсий.');
                             });
                     });
                 }

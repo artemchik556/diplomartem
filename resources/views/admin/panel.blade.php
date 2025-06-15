@@ -6,6 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- Добавлен CSRF-токен -->
     <title>Управление экскурсиями и гидами</title>
     <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
     <link rel="stylesheet" href="{{ asset('css/info.css') }}">
@@ -13,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/modul.css') }}">
     <link rel="stylesheet" href="{{ asset('css/excursion-detail.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Добавлен Font Awesome -->
     <script src="{{ asset('js/auth.js') }}" defer></script>
 </head>
 <body>
@@ -556,7 +558,7 @@
                                             <td>
                                                 <div class="review-rating">
                                                     @for($i = 1; $i <= 5; $i++)
-                                                    <i class="fas fa-star {{ $i <= $review->rating ? 'active' : 'inactive' }}"></i>
+                                                        <i class="fas fa-star {{ $i <= $review->rating ? 'active' : 'inactive' }}"></i>
                                                     @endfor
                                                     <span class="rating-value">({{ $review->rating }} из 5)</span>
                                                 </div>
@@ -723,9 +725,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        // Функция для базовой валидации формы
+        function validateForm(form) {
+            let isValid = true;
+            $(form).find('input[required], select[required], textarea[required]').each(function() {
+                if (!$(this).val()) {
+                    isValid = false;
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            return isValid;
+        }
+
         // AJAX для формы добавления экскурсии
         $('#add-excursion-form').on('submit', function(e) {
             e.preventDefault();
+            if (!validateForm(this)) {
+                alert('Пожалуйста, заполните все обязательные поля.');
+                return;
+            }
             let formData = new FormData(this);
             $.ajax({
                 url: $(this).attr('action'),
@@ -733,6 +753,9 @@
                 data: formData,
                 processData: false,
                 contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Добавлен CSRF-токен
+                },
                 success: function(response) {
                     window.location.href = '{{ route('admin.dashboard') }}#list-excursions';
                 },
@@ -745,6 +768,10 @@
         // AJAX для формы редактирования экскурсии
         $('#edit-excursion-form').on('submit', function(e) {
             e.preventDefault();
+            if (!validateForm(this)) {
+                alert('Пожалуйста, заполните все обязательные поля.');
+                return;
+            }
             let formData = new FormData(this);
             $.ajax({
                 url: $(this).attr('action'),
@@ -752,6 +779,9 @@
                 data: formData,
                 processData: false,
                 contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Добавлен CSRF-токен
+                },
                 success: function(response) {
                     window.location.href = '{{ route('admin.dashboard') }}#list-excursions';
                 },
