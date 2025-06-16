@@ -112,14 +112,14 @@
         </div>
 
         <div class="sort-buttons">
-            <button type="button" name="sort" value="price_asc" {{ request('sort') == 'price_asc' ? 'class=active' : '' }}>По возрастанию</button>
-            <button type="button" name="sort" value="price_desc" {{ request('sort') == 'price_desc' ? 'class=active' : '' }}>По убыванию</button>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}" class="{{ request('sort') == 'price_asc' ? 'active' : '' }}">По возрастанию</a>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}" class="{{ request('sort') == 'price_desc' ? 'active' : '' }}">По убыванию</a>
         </div>
 
         <label class="title" for="rating">Рейтинг:</label>
         <div class="sort-buttons">   
-            <button type="button" name="sort" value="rating_asc" {{ request('sort') == 'rating_asc' ? 'class=active' : '' }}>По возрастанию</button>
-            <button type="button" name="sort" value="rating_desc" {{ request('sort') == 'rating_desc' ? 'class=active' : '' }}>По убыванию</button>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'rating_asc']) }}" class="{{ request('sort') == 'rating_asc' ? 'active' : '' }}">По возрастанию</a>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'rating_desc']) }}" class="{{ request('sort') == 'rating_desc' ? 'active' : '' }}">По убыванию</a>
         </div>
 
         <!-- Фильтрация по направлению -->
@@ -146,9 +146,6 @@
                 <option value="autumn" {{ request('season') == 'autumn' ? 'selected' : '' }}>Осень</option>
             </select>
         </div>
-
-        <!-- Скрытое поле для сортировки -->
-        <input type="hidden" name="sort" value="{{ request('sort') }}">
 
         <div class="filter-buttons">
             <button type="submit" class="btn btn-reset">Применить фильтры</button>
@@ -198,6 +195,18 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const loadMoreBtn = document.getElementById('load-more');
                 const excursionsList = document.getElementById('excursions-list');
+                const filtersForm = document.getElementById('filters-form');
+
+                // Обработчик для кнопок сортировки
+                document.querySelectorAll('.sort-buttons a').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const sortValue = this.getAttribute('href').split('=')[1];
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('sort', sortValue);
+                        window.location.href = url.toString();
+                    });
+                });
 
                 if (loadMoreBtn) {
                     loadMoreBtn.addEventListener('click', function() {
@@ -213,34 +222,34 @@
                         button.disabled = true;
 
                         fetch(url, {
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'Accept': 'application/json'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                // Добавляем новые экскурсии
-                                excursionsList.insertAdjacentHTML('beforeend', data.html);
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Добавляем новые экскурсии
+                            excursionsList.insertAdjacentHTML('beforeend', data.html);
 
-                                // Обновляем номер страницы
-                                const newPage = parseInt(page) + 1;
-                                button.setAttribute('data-page', newPage);
+                            // Обновляем номер страницы
+                            const newPage = parseInt(page) + 1;
+                            button.setAttribute('data-page', newPage);
 
-                                // Если больше нет экскурсий - скрываем кнопку
-                                if (!data.hasMore) {
-                                    button.remove(); // Удаляем кнопку, если больше нет страниц
-                                } else {
-                                    button.textContent = 'Показать больше';
-                                    button.disabled = false;
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error loading more excursions:', error);
-                                button.textContent = 'Ошибка, попробуйте еще раз';
+                            // Если больше нет экскурсий - скрываем кнопку
+                            if (!data.hasMore) {
+                                button.remove(); // Удаляем кнопку, если больше нет страниц
+                            } else {
+                                button.textContent = 'Показать больше';
                                 button.disabled = false;
-                                alert('Произошла ошибка при загрузке экскурсий.');
-                            });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading more excursions:', error);
+                            button.textContent = 'Ошибка, попробуйте еще раз';
+                            button.disabled = false;
+                            alert('Произошла ошибка при загрузке экскурсий.');
+                        });
                     });
                 }
             });
@@ -323,6 +332,37 @@
             .excursion-card {
                 position: relative;
             }
+
+            .sort-buttons {
+                display: flex;
+                gap: 10px;
+                margin: 10px 0;
+            }
+
+            .sort-buttons a {
+                display: inline-block;
+                padding: 13px;
+                background-color: #F8B13C;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                text-decoration: none;
+                font-size: 16px;
+                font-family: 'InterMedium', sans-serif;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: center;
+                flex: 1;
+            }
+
+            .sort-buttons a:hover {
+                background-color: #e69e2e;
+            }
+
+            .sort-buttons a.active {
+                background-color: #e69e2e;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
         </style>
 
     </div>
@@ -393,119 +433,98 @@
                 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const filtersForm = document.getElementById('filters-form');
+    const sortButtons = document.querySelectorAll('.sort-buttons a');
     const excursionsList = document.getElementById('excursions-list');
-    let loadMoreBtn = document.getElementById('load-more');
+    const filtersForm = document.getElementById('filters-form');
 
-    // Обработчик для кнопок сортировки
-    document.querySelectorAll('.sort-buttons button').forEach(button => {
+    sortButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
-            const sortInput = filtersForm.querySelector('input[name="sort"]');
-            sortInput.value = this.value;
-            filtersForm.dispatchEvent(new Event('submit'));
-        });
-    });
+            
+            // Убираем активный класс у всех кнопок
+            sortButtons.forEach(btn => btn.classList.remove('active'));
+            // Добавляем активный класс нажатой кнопке
+            this.classList.add('active');
 
-    // Обработчик отправки формы
-    filtersForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(filtersForm);
-        const url = new URL('{{ url("excurcion") }}');
-        
-        formData.forEach((value, key) => {
-            if (value) {
-                url.searchParams.set(key, value);
-            } else {
-                url.searchParams.delete(key);
-            }
-        });
+            // Получаем текущие параметры формы
+            const formData = new FormData(filtersForm);
+            formData.set('sort', this.dataset.sort);
 
-        url.searchParams.set('page', '1');
+            // Показываем индикатор загрузки
+            excursionsList.style.opacity = '0.5';
+            excursionsList.style.pointerEvents = 'none';
 
-        excursionsList.innerHTML = '<div class="loading">Загрузка...</div>';
-
-        fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            excursionsList.innerHTML = data.html || '<div class="no-results">Экскурсии не найдены</div>';
-
-            if (data.hasMore) {
-                if (!loadMoreBtn) {
-                    const newLoadMoreBtn = document.createElement('button');
-                    newLoadMoreBtn.id = 'load-more';
-                    newLoadMoreBtn.className = 'btn-load-more';
-                    newLoadMoreBtn.dataset.page = '2';
-                    newLoadMoreBtn.textContent = 'Показать больше';
-                    excursionsList.insertAdjacentElement('afterend', newLoadMoreBtn);
-                    loadMoreBtn = newLoadMoreBtn;
-                    addLoadMoreListener(loadMoreBtn);
-                } else {
-                    loadMoreBtn.dataset.page = '2';
-                    loadMoreBtn.style.display = 'block';
+            // Отправляем AJAX запрос
+            fetch(window.location.pathname + '?' + new URLSearchParams(formData), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
-            } else if (loadMoreBtn) {
-                loadMoreBtn.remove();
-                loadMoreBtn = null;
-            }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Обновляем URL без перезагрузки страницы
+                const newUrl = window.location.pathname + '?' + new URLSearchParams(formData);
+                window.history.pushState({}, '', newUrl);
 
-            window.history.pushState({}, '', url);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            excursionsList.innerHTML = '<div class="error">Ошибка при загрузке экскурсий</div>';
-        });
-    });
-
-    // Обработчик сброса фильтров
-    document.querySelector('.btn-reset[href]').addEventListener('click', function(e) {
-        e.preventDefault();
-        filtersForm.reset();
-        const url = new URL('{{ url("excurcion") }}');
-        url.searchParams.set('page', '1');
-
-        fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            excursionsList.innerHTML = data.html || '<div class="no-results">Экскурсии не найдены</div>';
-            if (data.hasMore) {
-                if (!loadMoreBtn) {
-                    const newLoadMoreBtn = document.createElement('button');
-                    newLoadMoreBtn.id = 'load-more';
-                    newLoadMoreBtn.className = 'btn-load-more';
-                    newLoadMoreBtn.dataset.page = '2';
-                    newLoadMoreBtn.textContent = 'Показать больше';
-                    excursionsList.insertAdjacentElement('afterend', newLoadMoreBtn);
-                    loadMoreBtn = newLoadMoreBtn;
-                    addLoadMoreListener(loadMoreBtn);
-                } else {
-                    loadMoreBtn.dataset.page = '2';
-                    loadMoreBtn.style.display = 'block';
+                // Обновляем содержимое списка экскурсий
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newExcursionsList = doc.getElementById('excursions-list');
+                
+                if (newExcursionsList) {
+                    excursionsList.innerHTML = newExcursionsList.innerHTML;
                 }
-            } else if (loadMoreBtn) {
-                loadMoreBtn.remove();
-                loadMoreBtn = null;
-            }
 
-            window.history.pushState({}, '', url);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            excursionsList.innerHTML = '<div class="error">Ошибка при загрузке экскурсий</div>';
+                // Возвращаем нормальный вид списку
+                excursionsList.style.opacity = '1';
+                excursionsList.style.pointerEvents = 'auto';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                excursionsList.style.opacity = '1';
+                excursionsList.style.pointerEvents = 'auto';
+            });
         });
     });
+});
+</script>
 
+<style>
+.sort-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.sort-buttons a {
+    display: inline-block;
+    padding: 13px;
+    background-color: #F8B13C;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 16px;
+    font-family: 'InterMedium', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    flex: 1;
+}
+
+.sort-buttons a:hover {
+    background-color: #e69e2e;
+}
+
+.sort-buttons a.active {
+    background-color: #e69e2e;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#excursions-list {
+    transition: opacity 0.3s ease;
+}
+</style>
 
 </body>
 @include('auth.login')

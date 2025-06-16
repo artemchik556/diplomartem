@@ -57,7 +57,7 @@ class ExcursionController extends Controller
             });
         }
 
-        if ($request->has('sort')) {
+        if ($request->filled('sort')) {
             switch ($request->sort) {
                 case 'price_asc':
                     $query->orderBy('price', 'asc');
@@ -80,8 +80,10 @@ class ExcursionController extends Controller
                     }], 'rating')->orderBy('reviews_avg_rating', 'asc');
                     break;
                 default:
-                    $query->orderBy('price', 'asc');
+                    $query->orderBy('created_at', 'desc');
             }
+        } else {
+            $query->orderBy('created_at', 'desc');
         }
 
         $excursions = $query->paginate(9);
